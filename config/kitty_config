@@ -1,0 +1,62 @@
+# kitty.conf
+
+# Font configuration
+font_family      BlexMono Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        12.0
+
+# Cursor
+cursor_shape      block
+cursor_blink_interval 0.9
+
+# Scrollback
+scrollback_lines 10000
+
+# Window padding
+window_margin_width 10
+window_margin_height 10
+
+# Dynamic window title
+dynamic_title yes
+
+# Key bindings
+map ctrl+shift+v paste_from_clipboard
+map ctrl+shift+c copy_to_clipboard
+map ctrl+shift+f toggle_fullscreen
+
+
+# Theme
+# Simple Black & White (with Dracula Accents)
+
+# Basic Colors
+foreground            #FFFFFF
+background            #000000
+selection_foreground  #FFFFFF
+selection_background  #44475A
+url_color             #8BE9FD
+
+# Cursor (Dracula Pink for visibility)
+cursor                #FF79C6
+cursor_text_color     #000000
+
+# Black and White (Neutralized)
+color0  #000000
+color8  #6272A4
+color7  #F8F8F2
+color15 #FFFFFF
+
+# Dracula Accents
+color1  #FF5555
+color2  #50FA7B
+color3  #F1FA8C
+color4  #BD93F9
+color5  #FF79C6
+color6  #8BE9FD
+
+color9  #FF5555
+color10 #50FA7B
+color11 #F1FA8C
+color12 #BD93F9
+color13 #FF79C6
+color14 #8BE9FD
