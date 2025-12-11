@@ -7,8 +7,8 @@ chmod +x $CONFIGDIR/scripts/install_fonts_blex.sh
 $CONFIGDIR/scripts/install_fonts_blex.sh
 chmod +x $CONFIGDIR/scripts/install_fonts_fira.sh
 $CONFIGDIR/scripts/install_fonts_fira.sh
-chmod +x $CONFIGDIR/scripts/install_fonts_caskadya.sh
-$CONFIGDIR/scripts/install_fonts_caskadya.sh
+chmod +x $CONFIGDIR/scripts/install_fonts_caskaydia.sh
+$CONFIGDIR/scripts/install_fonts_caskaydia.sh
 
 ################################################
 # install kitty
