@@ -1,7 +1,7 @@
 # kitty.conf
 
 # Font configuration
-font_family      BlexMono Nerd Font
+font_family      FiraCode Nerd Font
 bold_font        auto
 italic_font      auto
 font_size        12.0

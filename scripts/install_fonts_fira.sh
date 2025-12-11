@@ -1,12 +1,13 @@
 #!/bin/bash
 
-FONT_NAME="BlexMono Nerd Font"
+# FiraCode
+FONT_NAME="FiraCode Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
-ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IBMPlexMono.zip"
-ZIP_FILE="/tmp/BlexMono.zip"
+ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip"
+ZIP_FILE="/tmp/FiraCode.zip"
 
 # Check if font already exists
-if fc-list | grep -i "BlexMono Nerd Font" >/dev/null 2>&1; then
+if fc-list | grep -i "FiraCode Nerd Font" >/dev/null 2>&1; then
   echo "$FONT_NAME is already installed."
   exit 0
 fi
