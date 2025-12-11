@@ -2,11 +2,13 @@
 
 CONFIGDIR="$HOME/config/simple_configs"
 
-# install the fonts
+# Install the fonts
 chmod +x $CONFIGDIR/scripts/install_fonts_blex.sh
 $CONFIGDIR/scripts/install_fonts_blex.sh
 chmod +x $CONFIGDIR/scripts/install_fonts_fira.sh
 $CONFIGDIR/scripts/install_fonts_fira.sh
+chmod +x $CONFIGDIR/scripts/install_fonts_caskadya.sh
+$CONFIGDIR/scripts/install_fonts_caskadya.sh
 
 ################################################
 # install kitty
