@@ -51,3 +51,21 @@ echo '-> Installing zsh configuration'
 mv $HOME/.zshrc $HOME/.zshrc-backup
 cp $CONFIGDIR/src/config/zshrc $HOME/.zshrc
 ################################################
+
+################################################
+# install nvm 
+echo '-> Verify if NVM is installed'
+if [ "$(command -v nvm)" ]; then
+    echo "command \"NVM\" exists on system"
+else
+    echo "NVM its not installed on the system"
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+fi
+
+# install node
+echo '-> Verify if NPM is installed'
+if [ "$(command -v npm)" ]; then
+    echo "command \"NPM\" exists on system"
+else
+    echo "NPM its not installed on the system"
+fi
