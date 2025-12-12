@@ -1,108 +1,124 @@
 #!/bin/bash
+#
+# This script automates the setup of a developer environment by installing and
+# configuring various tools and applications. It is designed to be idempotent,
+# meaning it can be run multiple times without causing issues.
+#
 set -e
 
 # Get the directory of the script
 CONFIGDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Install the fonts
+# Function to print informational messages
+info() {
+    echo "[INFO] $1"
+}
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# --- Font Installation ---
+info "Installing fonts..."
 for font_script in "$CONFIGDIR/src/scripts/install_fonts_blex.sh" "$CONFIGDIR/src/scripts/install_fonts_fira.sh" "$CONFIGDIR/src/scripts/install_fonts_caskaydia.sh"; do
-    chmod +x "$font_script"
-    "$font_script"
+    if [ -f "$font_script" ]; then
+        info "Running $font_script..."
+        chmod +x "$font_script"
+        "$font_script"
+    else
+        info "Font script $font_script not found, skipping."
+    fi
 done
+info "Fonts installation complete."
 
-################################################
-# install kitty
-echo '-> Verify if Kitty exists'
-if [ "$(command -v kitty)" ]; then
-    echo "Package \"Kitty\" exists on system"
+# --- Kitty Terminal Installation and Configuration ---
+info "Setting up Kitty terminal..."
+if command_exists kitty; then
+    info "Kitty is already installed."
 else
-    # It's a good practice to update the package list before installing a new package
-    # sudo apt update
-    sudo apt install kitty
+    info "Installing Kitty..."
+    sudo apt update
+    sudo apt install -y kitty
 fi
 
-# install kitty theme
-echo '-> Installing kitty configuration'
-if [ -f "$HOME/.config/kitty/kitty.conf" ]; then
-    mv "$HOME/.config/kitty/kitty.conf" "$HOME/.config/kitty/kitty_backup.conf"
+info "Configuring Kitty..."
+KITTY_CONFIG_DIR="$HOME/.config/kitty"
+KITTY_CONFIG_FILE="$KITTY_CONFIG_DIR/kitty.conf"
+mkdir -p "$KITTY_CONFIG_DIR"
+if [ -f "$KITTY_CONFIG_FILE" ]; then
+    info "Backing up existing Kitty configuration to $KITTY_CONFIG_FILE.backup"
+    mv "$KITTY_CONFIG_FILE" "$KITTY_CONFIG_FILE.backup"
 fi
-cp "$CONFIGDIR/src/config/kitty_config" "$HOME/.config/kitty/kitty.conf"
-################################################
+info "Applying new Kitty configuration."
+cp "$CONFIGDIR/src/config/kitty_config" "$KITTY_CONFIG_FILE"
+info "Kitty setup complete."
 
-################################################
-# install vscodium
-echo '-> Verify if Vscodium exists'
-chmod +x "$CONFIGDIR/src/scripts/install_vscodium.sh"
-"$CONFIGDIR/src/scripts/install_vscodium.sh"
-################################################
-
-################################################
-# install zsh
-echo '-> Verify if zsh exists'
-if [ "$(command -v zsh)" ]; then
-    echo "Package \"Zsh\" exists on system"
+# --- VSCodium Installation ---
+info "Setting up VSCodium..."
+VSCODIUM_INSTALL_SCRIPT="$CONFIGDIR/src/scripts/install_vscodium.sh"
+if [ -f "$VSCODIUM_INSTALL_SCRIPT" ]; then
+    chmod +x "$VSCODIUM_INSTALL_SCRIPT"
+    "$VSCODIUM_INSTALL_SCRIPT"
 else
-    # It's a good practice to update the package list before installing a new package
-    # sudo apt update
-    sudo apt install zsh
+    info "VSCodium install script not found, skipping."
 fi
-if [ -d "$HOME/.oh-my-zsh/" ]; then
-    echo "directory \"$HOME/.oh-my-zsh\" exists"
+info "VSCodium setup complete."
+
+# --- Zsh and Oh My Zsh Installation and Configuration ---
+info "Setting up Zsh and Oh My Zsh..."
+if command_exists zsh; then
+    info "Zsh is already installed."
 else
+    info "Installing Zsh..."
+    sudo apt update
+    sudo apt install -y zsh
+fi
+
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    info "Oh My Zsh is already installed."
+else
+    info "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
-# install the zsh configuration
-echo '-> Installing zsh configuration'
-if [ -f "$HOME/.zshrc" ]; then
-    mv "$HOME/.zshrc" "$HOME/.zshrc-backup"
+
+info "Configuring Zsh..."
+ZSHRC_FILE="$HOME/.zshrc"
+if [ -f "$ZSHRC_FILE" ]; then
+    info "Backing up existing .zshrc to $ZSHRC_FILE.backup"
+    mv "$ZSHRC_FILE" "$ZSHRC_FILE.backup"
 fi
-cp "$CONFIGDIR/src/config/zshrc" "$HOME/.zshrc"
-################################################
+info "Applying new Zsh configuration."
+cp "$CONFIGDIR/src/config/zshrc" "$ZSHRC_FILE"
+info "Zsh setup complete."
 
-################################################
-# install nvm 
-echo '-> Verify if NVM is installed'
-
-# Define the NVM directory
+# --- NVM, Node.js, and Gemini CLI Installation ---
+info "Setting up NVM, Node.js, and Gemini CLI..."
 export NVM_DIR="$HOME/.nvm"
-
-# Try to source NVM if it's already installed but not loaded
 if [ -s "$NVM_DIR/nvm.sh" ]; then
+    info "NVM is already installed."
+    # shellcheck source=/dev/null
     . "$NVM_DIR/nvm.sh"
-fi
-
-# Check if the nvm command is available now
-if command -v nvm &> /dev/null; then
-    echo "command \"NVM\" exists on system"
 else
-    echo "NVM is not installed on the system"
-    # Install NVM
+    info "Installing NVM..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    
-    # --- THIS IS THE TRICK ---
-    # Source NVM immediately after installation so the script can use it
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-fi
-
-# install node
-echo '-> Verify if Node is installed'
-if [ "$(command -v npm)" ]; then
-    echo "command \"NPM\" exists on system"
-else
-    echo "NPM is not installed on the system"
-    # Source nvm before using it
+    # shellcheck source=/dev/null
     . "$NVM_DIR/nvm.sh"
-    nvm install v24.12.0 
 fi
-################################################
 
-################################################
-# Install Gemini
-
-if [ "$(command -v gemini)" ]; then
-    echo "command \"gemini\" exists on system"
+if command_exists node && command_exists npm; then
+    info "Node.js and npm are already installed."
 else
-    echo "Gemini is not installed on the system" 
+    info "Installing Node.js (v24.12.0)..."
+    nvm install v24.12.0
+fi
+
+if command_exists gemini; then
+    info "Gemini CLI is already installed."
+else
+    info "Installing Gemini CLI..."
     npm install -g @google/gemini-cli
 fi
-################################################
+info "NVM, Node.js, and Gemini CLI setup complete."
+
+info "All installations and configurations are complete!"

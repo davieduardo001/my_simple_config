@@ -1,7 +1,17 @@
 #!/bin/bash
+#
+# This script installs the FiraCode Nerd Font.
+#
 set -e
 
-# FiraCode
+# Function to print informational messages
+info() {
+    echo "[INFO] $1"
+}
+
+# --- FiraCode Nerd Font Installation ---
+info "Starting FiraCode Nerd Font installation..."
+
 FONT_NAME="FiraCode Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
 ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip"
@@ -10,24 +20,20 @@ ZIP_FILE="/tmp/FiraCode.zip"
 # Clean up the temporary file on exit
 trap 'rm -f "$ZIP_FILE"' EXIT
 
-# Check if font already exists
 if fc-list | grep -i "FiraCode Nerd Font" >/dev/null 2>&1; then
-  echo "$FONT_NAME is already installed."
-  exit 0
+    info "$FONT_NAME is already installed. Skipping installation."
+    exit 0
 fi
 
-echo "$FONT_NAME is not installed. Downloading..."
+info "$FONT_NAME is not installed. Downloading..."
 
-# Download font zip
-curl -L -o "$ZIP_FILE" "$ZIP_URL"
-
-# Create font directory if it doesn't exist
-mkdir -p "$FONT_DIR"
-
-# Unzip to the fonts directory
-unzip -o "$ZIP_FILE" -d "$FONT_DIR"
-
-# Refresh font cache
-fc-cache -fv "$FONT_DIR"
-
-echo "$FONT_NAME has been installed successfully."
+if curl -L -o "$ZIP_FILE" "$ZIP_URL"; then
+    info "Download complete. Installing font..."
+    mkdir -p "$FONT_DIR"
+    unzip -o "$ZIP_FILE" -d "$FONT_DIR"
+    fc-cache -fv "$FONT_DIR"
+    info "$FONT_NAME has been installed successfully."
+else
+    echo "[ERROR] Failed to download $FONT_NAME. Please check the URL and your internet connection."
+    exit 1
+fi
