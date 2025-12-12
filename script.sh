@@ -3,12 +3,12 @@
 CONFIGDIR="$HOME/config/simple_configs"
 
 # Install the fonts
-chmod +x $CONFIGDIR/scripts/install_fonts_blex.sh
-$CONFIGDIR/scripts/install_fonts_blex.sh
-chmod +x $CONFIGDIR/scripts/install_fonts_fira.sh
-$CONFIGDIR/scripts/install_fonts_fira.sh
-chmod +x $CONFIGDIR/scripts/install_fonts_caskaydia.sh
-$CONFIGDIR/scripts/install_fonts_caskaydia.sh
+chmod +x $CONFIGDIR/src/scripts/install_fonts_blex.sh
+$CONFIGDIR/src/scripts/install_fonts_blex.sh
+chmod +x $CONFIGDIR/src/scripts/install_fonts_fira.sh
+$CONFIGDIR/src/scripts/install_fonts_fira.sh
+chmod +x $CONFIGDIR/src/scripts/install_fonts_caskaydia.sh
+$CONFIGDIR/src/scripts/install_fonts_caskaydia.sh
 
 ################################################
 # install kitty
@@ -23,7 +23,7 @@ fi
 echo '-> Installing kitty configuration'
 rm -rf $HOME/.config/kitty/kitty_backup.conf
 mv $HOME/.config/kitty/kitty.conf $HOME/.config/kitty/kitty_backup.conf
-cp $CONFIGDIR/config/kitty_config $HOME/.config/kitty/kitty.conf
+cp $CONFIGDIR/src/config/kitty_config $HOME/.config/kitty/kitty.conf
 ################################################
 
 ################################################
@@ -49,5 +49,5 @@ fi
 # install the zsh configuration
 echo '-> Installing zsh configuration'
 mv $HOME/.zshrc $HOME/.zshrc-backup
-cp $CONFIGDIR/config/zshrc $HOME/.zshrc
+cp $CONFIGDIR/src/config/zshrc $HOME/.zshrc
 ################################################
