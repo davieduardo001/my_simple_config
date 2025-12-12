@@ -55,17 +55,35 @@ cp $CONFIGDIR/src/config/zshrc $HOME/.zshrc
 ################################################
 # install nvm 
 echo '-> Verify if NVM is installed'
-if [ "$(command -v nvm)" ]; then
+
+# Define o diretório do NVM
+export NVM_DIR="$HOME/.nvm"
+
+# Tenta carregar o NVM primeiro (caso já esteja instalado mas não carregado)
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    . "$NVM_DIR/nvm.sh"
+fi
+
+# Verifica se o comando nvm funciona agora
+if command -v nvm &> /dev/null; then
     echo "command \"NVM\" exists on system"
 else
     echo "NVM its not installed on the system"
+    # Instala o NVM
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    
+    # --- O PULO DO GATO ESTÁ AQUI ---
+    # Recarrega o NVM imediatamente após a instalação para que o script possa usá-lo
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
 
+echo '-> Verify if Node is installed'
+# Agora o comando nvm funcionará nas linhas abaixo (ex: nvm install node)
 # install node
-echo '-> Verify if NPM is installed'
+echo '-> Verify if Node is installed'
 if [ "$(command -v npm)" ]; then
     echo "command \"NPM\" exists on system"
 else
     echo "NPM its not installed on the system"
+    nvm install latest
 fi
