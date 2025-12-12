@@ -1,10 +1,14 @@
 #!/bin/bash
+set -e
 
 # FiraCode
 FONT_NAME="FiraCode Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
 ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip"
 ZIP_FILE="/tmp/FiraCode.zip"
+
+# Clean up the temporary file on exit
+trap 'rm -f "$ZIP_FILE"' EXIT
 
 # Check if font already exists
 if fc-list | grep -i "FiraCode Nerd Font" >/dev/null 2>&1; then

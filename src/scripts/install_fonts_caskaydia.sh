@@ -1,10 +1,14 @@
 #!/bin/bash
+set -e
 
 # Caskadya
 FONT_NAME="CaskaydiaCove Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
 ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CascadiaCode.zip"
 ZIP_FILE="/tmp/CaskaydiaCove.zip"
+
+# Clean up the temporary file on exit
+trap 'rm -f "$ZIP_FILE"' EXIT
 
 # Check if font already exists
 if fc-list | grep -i "CaskaydiaCove Nerd Font" >/dev/null 2>&1; then

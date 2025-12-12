@@ -1,10 +1,14 @@
 #!/bin/bash
+set -e
 
 # BLEXMONO 
 FONT_NAME="BlexMono Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
 ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/IBMPlexMono.zip"
 ZIP_FILE="/tmp/BlexMono.zip"
+
+# Clean up the temporary file on exit
+trap 'rm -f "$ZIP_FILE"' EXIT
 
 # Check if font already exists
 if fc-list | grep -i "BlexMono Nerd Font" >/dev/null 2>&1; then

@@ -26,7 +26,7 @@ map ctrl+shift+v paste_from_clipboard
 map ctrl+shift+c copy_to_clipboard
 map ctrl+shift+f toggle_fullscreen
 
-##################################################3
+##################################################
 # dracula
 
 foreground            #f8f8f2
