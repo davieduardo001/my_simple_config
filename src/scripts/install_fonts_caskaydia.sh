@@ -4,9 +4,44 @@
 #
 set -e
 
+# Define colors
+if [[ -t 1 ]]; then
+    RED=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    BLUE=$(tput setaf 4)
+    MAGENTA=$(tput setaf 5)
+    CYAN=$(tput setaf 6)
+    RESET=$(tput sgr0)
+else
+    RED=""
+    GREEN=""
+    YELLOW=""
+    BLUE=""
+    MAGENTA=""
+    CYAN=""
+    RESET=""
+fi
+
 # Function to print informational messages
 info() {
-    echo "[INFO] $1"
+    echo "${GREEN}[INFO]${RESET} $1"
+}
+
+# Function to print warning messages
+warn() {
+    echo "${YELLOW}[WARN]${RESET} $1"
+}
+
+# Function to print error messages
+error() {
+    echo "${RED}[ERROR]${RESET} $1" >&2
+    exit 1
+}
+
+# Function to print action required messages
+action_required() {
+    echo "${CYAN}[ACTION]${RESET} $1"
 }
 
 # --- CaskaydiaCove Nerd Font Installation ---
@@ -25,15 +60,14 @@ if fc-list | grep -i "CaskaydiaCove Nerd Font" >/dev/null 2>&1; then
     exit 0
 fi
 
-info "$FONT_NAME is not installed. Downloading..."
+action_required "$FONT_NAME is not installed. Downloading..."
 
-if curl -L -o "$ZIP_FILE" "$ZIP_URL"; then
+if curl -L -o "$ZIP_FILE" "$URL"; then
     info "Download complete. Installing font..."
-    mkdir -p "$FONT_DIR"
-    unzip -o "$ZIP_FILE" -d "$FONT_DIR"
-    fc-cache -fv "$FONT_DIR"
+    mkdir -p "$FONT_DIR" || error "Failed to create font directory."
+    unzip -o "$ZIP_FILE" -d "$FONT_DIR" || error "Failed to unzip font."
+    fc-cache -fv "$FONT_DIR" || error "Failed to refresh font cache."
     info "$FONT_NAME has been installed successfully."
 else
-    echo "[ERROR] Failed to download $FONT_NAME. Please check the URL and your internet connection."
-    exit 1
+    error "Failed to download $FONT_NAME. Please check the URL and your internet connection."
 fi
