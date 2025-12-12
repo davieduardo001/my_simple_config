@@ -29,8 +29,8 @@ cp $CONFIGDIR/src/config/kitty_config $HOME/.config/kitty/kitty.conf
 ################################################
 # install vscodium
 echo '-> Verify if Vscodium existis'
-chmod +x ./scripts/install_vscodium.sh
-./scripts/install_vscodium.sh
+chmod +x $CONFIGDIR/src/scripts/install_vscodium.sh
+$CONFIGDIR/src/scripts/install_vscodium.sh
 ################################################
 
 ################################################
