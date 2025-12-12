@@ -85,5 +85,5 @@ if [ "$(command -v npm)" ]; then
     echo "command \"NPM\" exists on system"
 else
     echo "NPM its not installed on the system"
-    nvm install latest
+    nvm install v24.12.0 
 fi
