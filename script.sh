@@ -77,8 +77,6 @@ else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 fi
 
-echo '-> Verify if Node is installed'
-# Agora o comando nvm funcionará nas linhas abaixo (ex: nvm install node)
 # install node
 echo '-> Verify if Node is installed'
 if [ "$(command -v npm)" ]; then
@@ -87,3 +85,15 @@ else
     echo "NPM its not installed on the system"
     nvm install v24.12.0 
 fi
+################################################
+
+################################################
+# Install Gemini
+
+if [ "$(command -v gemini)" ]; then
+    echo "command \"gemini\" exists on system"
+else
+    echo "Gemini its not installed on the system" 
+    npm install -g @google/gemini-cli
+fi
+################################################
