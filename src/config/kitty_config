@@ -27,50 +27,44 @@ map ctrl+shift+c copy_to_clipboard
 map ctrl+shift+f toggle_fullscreen
 
 ##################################################
-# dracula
+# Noctis Bordo
 
-foreground            #f8f8f2
-background            #282a36
-selection_foreground  #ffffff
-selection_background  #44475a
+background            #2B2721
+foreground            #D4C4B8
+cursor                #BD5E80
+cursor_text_color     #2B2721
 
-url_color #8be9fd
+# Black
+color0 #2B2721
+color8 #736963
 
-# black
-color0  #21222c
-color8  #6272a4
+# Red
+color1 #BD5E80
+color9 #E07B91
 
-# red
-color1  #ff5555
-color9  #ff6e6e
+# Green
+color2 #85A389
+color10 #A0C0A4
 
-# green
-color2  #50fa7b
-color10 #69ff94
+# Yellow
+color3 #D4A870
+color11 #E8C088
 
-# yellow
-color3  #f1fa8c
-color11 #ffffa5
+# Blue
+color4 #7A8C9E
+color12 #92A8BC
 
-# blue
-color4  #bd93f9
-color12 #d6acff
+# Magenta
+color5 #A37A9E
+color13 #BC92B8
 
-# magenta
-color5  #ff79c6
-color13 #ff92df
+# Cyan
+color6 #7A9E9E
+color14 #92BCBC
 
-# cyan
-color6  #8be9fd
-color14 #a4ffff
-
-# white
-color7  #f8f8f2
-color15 #ffffff
-
-# Cursor colors
-cursor            #f8f8f2
-cursor_text_color background
+# White
+color7 #D4C4B8
+color15 #E8DCD4
 
 # Tab bar colors
 active_tab_foreground   #282a36
