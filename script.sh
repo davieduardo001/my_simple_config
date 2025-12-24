@@ -19,7 +19,22 @@ fi
 
 # --- Helper Functions ---
 info() { echo "${GREEN}[INFO]${RESET} $1"; }
-warn() { echo "${YELLOW}[WARN]RESET} $1"; }
+warn() { echo "${YELLOW}[WARN]${RESET} $1"; }
+
+# --- Main Setup ---
+info "Starting environment setup..."
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPTS_SUBDIR="$SCRIPT_DIR/src/scripts"
+
+# Make all installation scripts executable before running them
+info "Setting execute permissions for installation scripts..."
+for script in "$SCRIPTS_SUBDIR"/*.sh; do
+    if [ -f "$script" ]; then
+        chmod +x "$script"
+        info "Made $script executable."
+    fi
+done
 
 # --- Oh My Zsh Installation ---
 install_oh_my_zsh() {
@@ -27,25 +42,20 @@ install_oh_my_zsh() {
         info "Oh My Zsh is already installed. Skipping."
     else
         info "Installing Oh My Zsh..."
-        /bin/bash -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+        # Using the --unattended flag to prevent the installer from trying to change the shell
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     fi
 }
 
-
-# --- Main Setup ---
-info "Starting environment setup..."
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
 # Run installation scripts
-"$SCRIPT_DIR/src/scripts/install_zsh.sh"
-"$SCRIPT_DIR/src/scripts/install_kitty.sh"
-"$SCRIPT_DIR/src/scripts/install_vscodium.sh"
-"$SCRIPT_DIR/src/scripts/install_fonts_blex.sh"
-"$SCRIPT_DIR/src/scripts/install_fonts_caskaydia.sh"
-"$SCRIPT_DIR/src/scripts/install_fonts_fira.sh"
+"$SCRIPTS_SUBDIR/install_zsh.sh"
+"$SCRIPTS_SUBDIR/install_kitty.sh"
+"$SCRIPTS_SUBDIR/install_vscodium.sh"
+"$SCRIPTS_SUBDIR/install_fonts_blex.sh"
+"$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
+"$SCRIPTS_SUBDIR/install_fonts_fira.sh"
 
-# Install Oh My Zsh
+# Install Oh My Zsh after Zsh binary is installed
 install_oh_my_zsh
 
 # --- Configuration File Deployment ---
