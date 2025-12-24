@@ -86,6 +86,68 @@ set_default_shell() {
     fi
 }
 
+# --- NVM & Node Installation ---
+install_nvm_node() {
+    export NVM_DIR="$HOME/.nvm"
+    
+    # 1. Install NVM if not present
+    if [ -d "$NVM_DIR" ]; then
+        info "NVM is already installed. Skipping download."
+    else
+        action_required "NVM is not installed. Installing..."
+        # Install latest stable nvm
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    fi
+
+    # 2. Load NVM into the current script session
+    # This is required because nvm is a function, not a binary, and isn't available
+    # immediately after install without sourcing.
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+        \. "$NVM_DIR/nvm.sh" 
+    else
+        error "NVM script not found at $NVM_DIR/nvm.sh"
+    fi
+
+    # 3. Install Node LTS
+    info "Installing Node.js LTS..."
+    nvm install --lts
+    nvm use --lts
+    nvm alias default 'lts/*' # Ensure this version sticks as default for new shells
+
+    info "Node.js $(node -v) and npm $(npm -v) installed successfully. ✅"
+}
+
+install_nvm_node
+
+# --- Gemini CLI Installation ---
+install_gemini_cli() {
+    info "Checking for Google Gemini CLI..."
+
+    # Ensure npm is accessible (redundant check, but safe)
+    if ! command -v npm &> /dev/null; then
+        # Attempt to load nvm one more time if npm is missing
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    fi
+
+    if ! command -v npm &> /dev/null; then
+        error "npm is not accessible. Cannot install Gemini CLI."
+    fi
+
+    # Check if the package is already installed globally
+    if npm list -g @google/gemini-cli --depth=0 > /dev/null 2>&1; then
+        info "Gemini CLI is already installed. Skipping."
+    else
+        action_required "Installing Google Gemini CLI..."
+        if npm install -g @google/gemini-cli; then
+            info "Gemini CLI installed successfully. ✅"
+        else
+            error "Failed to install Gemini CLI."
+        fi
+    fi
+}
+
+install_gemini_cli
 
 # Run installation scripts
 "$SCRIPTS_SUBDIR/install_zsh.sh"
