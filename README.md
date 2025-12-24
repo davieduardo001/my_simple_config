@@ -42,3 +42,5 @@ You can easily customize this setup to fit your needs:
 - **Add New Software:** Create a new installation script in `src/scripts/` and add a call to it in the main `script.sh`.
 - **Change Configurations:** Simply edit the files in the `src/config/` directory. The next time you run the script, your changes will be applied.
 - **Add New Fonts:** Create a new font installation script in `src/scripts/` modeled after the existing ones.
+
+* Just testing something
