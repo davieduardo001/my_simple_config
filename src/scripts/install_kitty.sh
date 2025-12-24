@@ -9,18 +9,21 @@ if [[ -t 1 ]]; then
     RED=$(tput setaf 1)
     GREEN=$(tput setaf 2)
     YELLOW=$(tput setaf 3)
+    CYAN=$(tput setaf 6)
     RESET=$(tput sgr0)
 else
     RED=""
     GREEN=""
     YELLOW=""
+    CYAN=""
     RESET=""
 fi
 
 # --- Helper Functions ---
-info() { echo "${GREEN}[INFO]${RESET} $1"; }
-warn() { echo "${YELLOW}[WARN]${RESET} $1"; }
-error() { echo "${RED}[ERROR]${RESET} $1" >&2; exit 1; }
+info() { echo "✨ ${GREEN}[INFO]${RESET} $1"; }
+warn() { echo "⚠️  ${YELLOW}[WARN]${RESET} $1"; }
+error() { echo "❌ ${RED}[ERROR]${RESET} $1" >&2; exit 1; }
+action_required() { echo "🚀 ${CYAN}[ACTION]${RESET} $1"; }
 
 # --- OS Detection ---
 get_distro() {
@@ -71,16 +74,16 @@ install_kitty() {
 
     case "$distro" in
         "debian")
-            info "Using APT for installation."
+            action_required "Using APT for installation."
             sudo apt-get update
             sudo apt-get install -y kitty || error "Failed to install kitty."
             ;;
         "fedora")
-            info "Using DNF for installation."
+            action_required "Using DNF for installation."
             sudo dnf install -y kitty || error "Failed to install kitty."
             ;;
         "arch")
-            info "Using Pacman for installation."
+            action_required "Using Pacman for installation."
             sudo pacman -S --noconfirm kitty || error "Failed to install kitty."
             ;;
         *)

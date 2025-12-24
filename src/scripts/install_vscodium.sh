@@ -10,18 +10,21 @@ if [[ -t 1 ]]; then
     RED=$(tput setaf 1)
     GREEN=$(tput setaf 2)
     YELLOW=$(tput setaf 3)
+    CYAN=$(tput setaf 6)
     RESET=$(tput sgr0)
 else
     RED=""
     GREEN=""
     YELLOW=""
+    CYAN=""
     RESET=""
 fi
 
 # --- Helper Functions ---
-info() { echo "${GREEN}[INFO]${RESET} $1"; }
-warn() { echo "${YELLOW}[WARN]${RESET} $1"; }
-error() { echo "${RED}[ERROR]${RESET} $1" >&2; exit 1; }
+info() { echo "✨ ${GREEN}[INFO]${RESET} $1"; }
+warn() { echo "⚠️  ${YELLOW}[WARN]${RESET} $1"; }
+error() { echo "❌ ${RED}[ERROR]${RESET} $1" >&2; exit 1; }
+action_required() { echo "🚀 ${CYAN}[ACTION]${RESET} $1"; }
 
 # --- OS Detection ---
 get_distro() {
@@ -73,7 +76,7 @@ install_vscodium() {
 
     case "$distro" in
         "debian")
-            info "Using APT for installation."
+            action_required "Using APT for installation."
             local URL="https://github.com/VSCodium/vscodium/releases/download/1.106.37943/codium_1.106.37943_amd64.deb"
             local FILE="/tmp/VSCodium.deb"
             trap 'rm -f "$FILE"' EXIT
@@ -90,7 +93,7 @@ install_vscodium() {
             ;;
             
         "fedora")
-            info "Using DNF for installation."
+            action_required "Using DNF for installation."
             info "Importing GPG key..."
             sudo rpmkeys --import https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg || error "Failed to import GPG key."
             
@@ -103,7 +106,7 @@ install_vscodium() {
             ;;
             
         "arch")
-            info "Using AUR for installation."
+            action_required "Using AUR for installation."
             if ! command -v yay &> /dev/null; then
                 error "AUR helper 'yay' not found. Please install it first to proceed with VSCodium installation on Arch Linux."
             fi
