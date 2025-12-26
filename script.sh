@@ -149,6 +149,23 @@ install_gemini_cli() {
 
 install_gemini_cli
 
+# --- Deno Installation ---
+install_deno() {
+    info "Checking for Deno..."
+    if command -v deno &> /dev/null; then
+        info "Deno is already installed. Skipping."
+    else
+        action_required "Installing Deno..."
+        if curl -fsSL https://deno.land/install.sh | sh; then
+            info "Deno installed successfully. ✅"
+        else
+            error "Failed to install Deno."
+        fi
+    fi
+}
+
+install_deno
+
 # Run installation scripts
 "$SCRIPTS_SUBDIR/install_zsh.sh"
 "$SCRIPTS_SUBDIR/install_kitty.sh"
