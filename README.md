@@ -8,6 +8,9 @@ This project contains a set of scripts to automate the setup of a personalized L
 - **Automated Software Installation:**
   - **Zsh Shell:** Installs the Zsh binary.
   - **Oh My Zsh:** Installs the popular framework for managing Zsh configuration.
+  - **NVM & Node.js:** Installs Node Version Manager (NVM) to manage and install the latest LTS version of Node.js.
+  - **Google Gemini CLI:** Installs the command-line interface for interacting with Google's Gemini models.
+  - **Deno:** Installs the modern runtime for JavaScript and TypeScript.
   - **Kitty Terminal:** Installs the fast, feature-rich, GPU-based terminal emulator.
   - **VSCodium:** Installs the community-driven, freely-licensed binary distribution of VS Code.
   - **Nerd Fonts:** Installs BlexMono, CaskaydiaCove, and FiraCode Nerd Fonts for a great terminal experience.
@@ -42,5 +45,3 @@ You can easily customize this setup to fit your needs:
 - **Add New Software:** Create a new installation script in `src/scripts/` and add a call to it in the main `script.sh`.
 - **Change Configurations:** Simply edit the files in the `src/config/` directory. The next time you run the script, your changes will be applied.
 - **Add New Fonts:** Create a new font installation script in `src/scripts/` modeled after the existing ones.
-
-* Just testing something
