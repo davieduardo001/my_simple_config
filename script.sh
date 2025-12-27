@@ -158,9 +158,12 @@ install_gemini_cli
 "$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
 "$SCRIPTS_SUBDIR/install_fonts_fira.sh"
 "$SCRIPTS_SUBDIR/install_fastfetch.sh"
+"$SCRIPTS_SUBDIR/install_nvim.sh"
 
 # Install Oh My Zsh after Zsh binary is installed
 install_oh_my_zsh
+
+# Install nvim after verify that
 
 # --- Configuration File Deployment ---
 info "Deploying configuration files..."
