@@ -174,6 +174,7 @@ install_deno
 "$SCRIPTS_SUBDIR/install_fonts_blex.sh"
 "$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
 "$SCRIPTS_SUBDIR/install_fonts_fira.sh"
+"$SCRIPTS_SUBDIR/install_fastfetch.sh"
 
 # Install Oh My Zsh after Zsh binary is installed
 install_oh_my_zsh
@@ -237,6 +238,27 @@ if command -v codium &> /dev/null; then
     fi
 else
     warn "VSCodium not found. Skipping VSCodium profile deployment."
+fi
+
+# Deploy fastfetch config
+if command -v fastfetch &> /dev/null; then
+    FASTFETCH_CONFIG_DIR="$HOME/.config/fastfetch"
+
+    FASTFETCH_CONFIG_SOURCE="$SCRIPT_DIR/src/config/fastfetch.jsonc"
+    ASCII_SOURCE="$SCRIPT_DIR/src/config/ascii"
+    PNG_SOURCE="$SCRIPT_DIR/src/config/png"
+
+    ASCII_DEST="$FASTFETCH_CONFIG_DIR/ascii"
+    PNG_DEST="$FASTFETCH_CONFIG_DIR/png"
+    
+    ln -sf "$FASTFETCH_CONFIG_SOURCE" "$FASTFETCH_CONFIG_DEST"
+    info "Fastfetch config.jsonc deployed."
+
+    cp -f "$ASCII_SOURCE" "$ASCII_DEST"
+    cp -f "$PNG_SOURCE" "$PNG_DEST"
+    info "Fastfetch ascii art deployed."
+else
+    warn "Fastfetch not found. Skipping Fastfetch config deployment."
 fi
 
 # --- Final Steps ---
