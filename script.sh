@@ -169,6 +169,7 @@ install_deno
 # Run installation scripts
 "$SCRIPTS_SUBDIR/install_zsh.sh"
 "$SCRIPTS_SUBDIR/install_kitty.sh"
+"$SCRIPTS_SUBDIR/install_alacritty.sh"
 "$SCRIPTS_SUBDIR/install_vscodium.sh"
 "$SCRIPTS_SUBDIR/install_fonts_blex.sh"
 "$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
@@ -191,6 +192,19 @@ if command -v kitty &> /dev/null; then
     info "Kitty config deployed."
 else
     warn "Kitty not found. Skipping Kitty config deployment."
+fi
+
+# Deploy alacritty_config
+if command -v alacritty &> /dev/null; then
+    ALACRITTY_CONFIG_DIR="$HOME/.config/alacritty"
+    ALACRITTY_CONFIG_SOURCE="$SCRIPT_DIR/src/config/alacritty.toml"
+    ALACRITTY_CONFIG_DEST="$ALACRITTY_CONFIG_DIR/alacritty.toml"
+
+    mkdir -p "$ALACRITTY_CONFIG_DIR"
+    ln -sf "$ALACRITTY_CONFIG_SOURCE" "$ALACRITTY_CONFIG_DEST"
+    info "Alacritty config deployed."
+else
+    warn "Alacritty not found. Skipping Alacritty config deployment."
 fi
 
 # Deploy zshrc
