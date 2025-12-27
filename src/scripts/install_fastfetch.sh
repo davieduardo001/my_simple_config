@@ -36,6 +36,7 @@ else
     # --- Installation logic ---
     if command -v apt-get &> /dev/null; then
         info "Detected Debian/Ubuntu-based system. Installing via apt."
+        sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
         sudo apt-get update
         sudo apt-get install -y fastfetch
     elif command -v pacman &> /dev/null; then
