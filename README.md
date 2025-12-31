@@ -10,8 +10,6 @@ This project contains a set of scripts to automate the setup of a personalized L
   - **Oh My Zsh:** Installs the popular framework for managing Zsh configuration.
   - **NVM & Node.js:** Installs Node Version Manager (NVM) to manage and install the latest LTS version of Node.js.
   - **Google Gemini CLI:** Installs the command-line interface for interacting with Google's Gemini models.
-  - **Deno:** Installs the modern runtime for JavaScript and TypeScript.
-  - **Kitty Terminal:** Installs the fast, feature-rich, GPU-based terminal emulator.
   - **VSCodium:** Installs the community-driven, freely-licensed binary distribution of VS Code.
   - **Nerd Fonts:** Installs BlexMono, CaskaydiaCove, and FiraCode Nerd Fonts for a great terminal experience.
 - **Configuration Deployment:** Automatically symlinks the configuration files for Kitty and Zsh.
@@ -32,7 +30,6 @@ The script will guide you through the process, installing the necessary software
 
 - `script.sh`: The main entry point for the setup process.
 - `src/config/`: Contains all the configuration files that will be deployed.
-  - `kitty_config`: Configuration for the Kitty terminal (colors, fonts, etc.).
   - `zshrc`: Configuration for the Zsh shell, designed to work with Oh My Zsh.
   - `my_vscod_profile.code-profile`: A profile for VSCodium.
 - `src/scripts/`: Contains the individual, OS-agnostic installation scripts for each piece of software.
