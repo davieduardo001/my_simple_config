@@ -44,9 +44,11 @@ action_required() {
 install_fira_font() {
     info "Starting FiraCode Nerd Font installation..."
 
+    # Latest version can be found at: https://github.com/ryanoasis/nerd-fonts/releases/latest
+    NERD_FONT_VERSION="v3.4.0"
     FONT_NAME="FiraCode Nerd Font"
     FONT_DIR="$HOME/.local/share/fonts"
-    ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip"
+    ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD_FONT_VERSION}/FiraCode.zip"
     ZIP_FILE="/tmp/FiraCode.zip"
 
     # Clean up the temporary file on exit

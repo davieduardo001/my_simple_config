@@ -44,9 +44,11 @@ action_required() {
 install_caskaydia_font() {
     info "Starting CaskaydiaCove Nerd Font installation..."
 
+    # Latest version can be found at: https://github.com/ryanoasis/nerd-fonts/releases/latest
+    NERD_FONT_VERSION="v3.4.0"
     FONT_NAME="CaskaydiaCove Nerd Font"
     FONT_DIR="$HOME/.local/share/fonts"
-    ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CascadiaCode.zip"
+    ZIP_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD_FONT_VERSION}/CascadiaCode.zip"
     ZIP_FILE="/tmp/CaskaydiaCove.zip"
 
     # Clean up the temporary file on exit
