@@ -74,6 +74,3 @@ install_caskaydia_font() {
 
 # --- Main Execution ---
 install_caskaydia_font
-
-# Make the script executable
-chmod +x "$0"

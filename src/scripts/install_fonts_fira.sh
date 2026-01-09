@@ -74,6 +74,3 @@ install_fira_font() {
 
 # --- Main Execution ---
 install_fira_font
-
-# Make the script executable
-chmod +x "$0"

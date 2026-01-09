@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script installs the Zsh shell on various Linux distributions.
+# This script installs the Kitty terminal emulator.
 #
 set -e
 
@@ -25,21 +25,20 @@ warn() { echo "⚠️  ${YELLOW}[WARN]${RESET} $1"; }
 error() { echo "❌ ${RED}[ERROR]${RESET} $1" >&2; exit 1; }
 action_required() { echo "🚀 ${CYAN}[ACTION]${RESET} $1"; }
 
-# --- Zsh Installation ---
-install_zsh() {
-    info "Starting Zsh installation..."
+# --- Kitty Installation ---
+install_kitty() {
+    info "Starting Kitty installation..."
 
-    if command -v zsh &> /dev/null; then
-        info "Zsh is already installed. Skipping installation."
+    if command -v kitty &> /dev/null; then
+        info "Kitty is already installed. Skipping installation."
         return
     fi
 
     action_required "Using dnf for installation."
-    sudo dnf install -y zsh || error "Failed to install Zsh with dnf."
+    sudo dnf install -y kitty || error "Failed to install Kitty with dnf."
     
-    info "Zsh installed successfully."
-    warn "To make Zsh your default shell, run: chsh -s \$(which zsh)"
+    info "Kitty installed successfully."
 }
 
 # --- Main Execution ---
-install_zsh "$1"
+install_kitty

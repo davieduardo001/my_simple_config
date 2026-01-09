@@ -123,7 +123,7 @@ install_nvm_node() {
   fi
 }
 
-install_nvm_node
+# install_nvm_node
 
 # --- Gemini CLI Installation ---
 install_gemini_cli() {
@@ -153,31 +153,14 @@ install_gemini_cli() {
   fi
 }
 
-install_gemini_cli
+# install_gemini_cli
 
 # --- Installation Logic ---
-use_yay=false
-action_required "This script is optimized for Arch Linux. Do you want to use yay (AUR helper) for installations?"
-read -p "Enter [y/N] to confirm: " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    use_yay=true
-fi
-
-if [ "$use_yay" = true ]; then
-    info "Starting Arch Linux specific setup with yay..."
-    "$SCRIPTS_SUBDIR/install_yay.sh"
-    "$SCRIPTS_SUBDIR/install_zsh.sh" --use-yay
-    "$SCRIPTS_SUBDIR/install_fastfetch.sh" --use-yay
-    "$SCRIPTS_SUBDIR/install_nvim.sh" --use-yay
-    "$SCRIPTS_SUBDIR/install_ghostty.sh" --use-yay
-else
-    info "Starting standard installation..."
-    "$SCRIPTS_SUBDIR/install_zsh.sh"
-    "$SCRIPTS_SUBDIR/install_fastfetch.sh"
-    "$SCRIPTS_SUBDIR/install_nvim.sh"
-    "$SCRIPTS_SUBDIR/install_ghostty.sh"
-fi
+info "Starting standard installation..."
+"$SCRIPTS_SUBDIR/install_zsh.sh"
+"$SCRIPTS_SUBDIR/install_fastfetch.sh"
+"$SCRIPTS_SUBDIR/install_nvim.sh"
+"$SCRIPTS_SUBDIR/install_kitty.sh"
 
 # Common installation scripts
 "$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
@@ -185,6 +168,44 @@ fi
 
 # Install Oh My Zsh after Zsh binary is installed
 install_oh_my_zsh
+
+# --- LazyVim Installation ---
+install_lazyvim() {
+    if [ -d "$HOME/.config/nvim/lua/lazyvim" ]; then
+        info "LazyVim is already installed. Skipping."
+        return
+    fi
+
+    action_required "Installing LazyVim..."
+    
+    # required
+    if [ -d "$HOME/.config/nvim" ]; then
+        mv ~/.config/nvim{,.bak}
+        info "Backed up existing nvim config to ~/.config/nvim.bak"
+    fi
+
+    # optional but recommended
+    if [ -d "$HOME/.local/share/nvim" ]; then
+        mv ~/.local/share/nvim{,.bak}
+        info "Backed up existing nvim share dir to ~/.local/share/nvim.bak"
+    fi
+    if [ -d "$HOME/.local/state/nvim" ]; then
+        mv ~/.local/state/nvim{,.bak}
+        info "Backed up existing nvim state dir to ~/.local/state/nvim.bak"
+    fi
+    if [ -d "$HOME/.cache/nvim" ]; then
+        mv ~/.cache/nvim{,.bak}
+        info "Backed up existing nvim cache dir to ~/.cache/nvim.bak"
+    fi
+
+    git clone https://github.com/LazyVim/starter ~/.config/nvim || error "Failed to clone LazyVim starter."
+
+    rm -rf ~/.config/nvim/.git
+    
+    info "LazyVim installed successfully."
+}
+
+install_lazyvim
 
 # --- Configuration File Deployment ---
 info "Deploying configuration files..."
@@ -234,6 +255,25 @@ deploy_nvim_configs() {
 
 deploy_nvim_configs
 
+# Deploy kitty config
+deploy_kitty_configs() {
+    if ! command -v kitty &>/dev/null; then
+        warn "Kitty not found. Skipping Kitty configuration deployment."
+        return
+    fi
+
+    info "Deploying Kitty configuration files..."
+
+    local config_dir="$HOME/.config/kitty"
+    local kitty_config_src="$SCRIPT_DIR/src/config/kitty/kitty.conf"
+
+    mkdir -p "$config_dir"
+
+    ln -sf "$kitty_config_src" "$config_dir/kitty.conf"
+    info "Kitty config deployed."
+}
+
+deploy_kitty_configs
 # --- Final Steps ---
 # Set Zsh as default shell if the user wants
 set_default_shell

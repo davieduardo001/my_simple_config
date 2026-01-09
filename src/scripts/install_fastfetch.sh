@@ -36,13 +36,8 @@ install_fastfetch() {
 
     action_required "fastfetch not found. Attempting to install..."
 
-    if [ "$1" == "--use-yay" ] && command -v yay &> /dev/null; then
-        info "Using yay for installation."
-        yay -S --noconfirm fastfetch
-    else
-        info "Using pacman for installation."
-        sudo pacman -S --noconfirm fastfetch
-    fi
+    info "Using dnf for installation."
+    sudo dnf install -y fastfetch
 
     # Final check
     if command -v fastfetch &> /dev/null; then

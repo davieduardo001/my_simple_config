@@ -32,21 +32,26 @@ install_neovim() {
 
     if command -v nvim &> /dev/null; then
         info "Neovim is already installed. Skipping installation."
-        return
+    else
+        action_required "Using dnf for installation."
+        sudo dnf install -y neovim || error "Failed to install Neovim with dnf."
+        info "Neovim installed successfully."
     fi
 
-    if [ "$1" == "--use-yay" ] && command -v yay &> /dev/null; then
-        action_required "Using yay for installation."
-        yay -S --noconfirm neovim || error "Failed to install Neovim with yay."
-    else
-        action_required "Using Pacman for installation."
-        sudo pacman -S --noconfirm neovim || error "Failed to install Neovim with Pacman."
+    action_required "Installing additional dependencies for Neovim..."
+    sudo dnf install -y tree-sitter-cli gcc curl fzf ripgrep fd-find || error "Failed to install additional dependencies."
+
+    action_required "Do you want to install lazygit (optional)?"
+    read -p "Enter [y/N] to confirm: " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        info "Installing lazygit..."
+        sudo dnf copr enable atim/lazygit -y
+        sudo dnf install lazygit -y || error "Failed to install lazygit."
     fi
-    info "Neovim installed successfully."
+
+    info "Neovim and its dependencies are all set."
 }
 
 # --- Main Execution ---
 install_neovim "$1"
-
-# Make the script executable
-chmod +x "$0"
