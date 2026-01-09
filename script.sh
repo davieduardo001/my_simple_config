@@ -90,15 +90,17 @@ set_default_shell() {
 
 # --- NVM & Node Installation ---
 install_nvm_node() {
-  export NVM_DIR="$HOME/.nvm"
+  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 
   # 1. Install NVM if not present
   if [ -d "$NVM_DIR" ]; then
     info "NVM is already installed. Skipping download."
   else
     action_required "NVM is not installed. Installing..."
-    # Install nvm v0.40.3
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    # The nvm installer script complains if NVM_DIR is set but the directory doesn't exist.
+    # We run the installer in a subshell where NVM_DIR is unset.
+    # The installer will then use the default location ($HOME/.nvm), which is what we want.
+    (unset NVM_DIR; curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash)
   fi
 
   # 2. Load NVM into the current script session
@@ -123,7 +125,7 @@ install_nvm_node() {
   fi
 }
 
-# install_nvm_node
+install_nvm_node
 
 # --- Gemini CLI Installation ---
 install_gemini_cli() {
@@ -132,7 +134,7 @@ install_gemini_cli() {
   # Ensure npm is accessible (redundant check, but safe)
   if ! command -v npm &>/dev/null; then
     # Attempt to load nvm one more time if npm is missing
-    export NVM_DIR="$HOME/.nvm"
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
   fi
 
@@ -153,7 +155,7 @@ install_gemini_cli() {
   fi
 }
 
-# install_gemini_cli
+install_gemini_cli
 
 # --- Installation Logic ---
 info "Starting standard installation..."
@@ -173,6 +175,15 @@ install_oh_my_zsh
 install_lazyvim() {
     if [ -d "$HOME/.config/nvim/lua/lazyvim" ]; then
         info "LazyVim is already installed. Skipping."
+        return
+    fi
+
+    # Check if a backup of nvim config already exists
+    if [ -d "$HOME/.config/nvim.bak" ] || \
+       [ -d "$HOME/.local/share/nvim.bak" ] || \
+       [ -d "$HOME/.local/state/nvim.bak" ] || \
+       [ -d "$HOME/.cache/nvim.bak" ]; then
+        warn "Existing Neovim backup directories found. Skipping LazyVim installation."
         return
     fi
 
@@ -274,6 +285,34 @@ deploy_kitty_configs() {
 }
 
 deploy_kitty_configs
+
+# Deploy fastfetch config
+deploy_fastfetch_configs() {
+    if ! command -v fastfetch &>/dev/null; then
+        warn "Fastfetch not found. Skipping Fastfetch configuration deployment."
+        return
+    fi
+
+    info "Deploying Fastfetch configuration files..."
+
+    local config_dir="$HOME/.config/fastfetch"
+    local fastfetch_config_src="$SCRIPT_DIR/src/config/fastfetch"
+
+    mkdir -p "$config_dir"
+    mkdir -p "$config_dir/ascii"
+    mkdir -p "$config_dir/png"
+
+    ln -sf "$fastfetch_config_src/fastfetch.jsonc" "$config_dir/fastfetch.jsonc"
+    info "Fastfetch config deployed."
+
+    ln -sf "$fastfetch_config_src/ascii/cute.txt" "$config_dir/ascii/cute.txt"
+    info "Fastfetch ascii art deployed."
+
+    ln -sf "$fastfetch_config_src/png/pfp.png" "$config_dir/png/pfp.png"
+    info "Fastfetch pfp deployed."
+}
+
+deploy_fastfetch_configs
 # --- Final Steps ---
 # Set Zsh as default shell if the user wants
 set_default_shell
