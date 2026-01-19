@@ -3,32 +3,87 @@
   "logo": {
     "type": "small",
     "padding": {
-      "top": 1,
+      "top": 2,
       "left": 1,
       "right": 3
     }
   },
   "display": {
-    "separator": "",
+    "separator": "    ",
+    "color": {
+      "keys": "blue"
+    },
+    "size": {
+      "binary_prefix": "si"
+    },
     "key": {
-        "width": 0
+      "type": "icon"
     }
   },
   "modules": [
     {
-        "type": "title",
-        "format": "{user}@{host}"
+      "type": "title",
+      "color": {
+        "user": "green",
+        "at": "white",
+        "host": "blue"
+      }
     },
-    // We removed the separator module (the dashed line)
-    "os",
-    "kernel",
-    "uptime",
-    "packages",
-    "shell",
-    "wm",
-    "terminal",
-    "cpu",
-    "memory",
-    "battery"
+    "break",
+    {
+      "type": "os",
+      "key": " ",
+      "keyColor": "blue"
+    },
+    {
+      "type": "kernel",
+      "key": " ",
+      "keyColor": "white"
+    },
+    {
+      "type": "uptime",
+      "key": " ",
+      "keyColor": "yellow"
+    },
+    {
+      "type": "packages",
+      "key": " ",
+      "keyColor": "red"
+    },
+    {
+      "type": "shell",
+      "key": " ",
+      "keyColor": "magenta"
+    },
+    {
+      "type": "wm",
+      "key": " ",
+      "keyColor": "blue"
+    },
+    {
+      "type": "terminal",
+      "key": " ",
+      "keyColor": "cyan"
+    },
+    {
+      "type": "cpu",
+      "key": " ",
+      "keyColor": "green"
+    },
+    {
+      "type": "memory",
+      "key": " ",
+      "keyColor": "yellow"
+    },
+    {
+      "type": "disk",
+      "key": " ",
+      "keyColor": "cyan"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
   ]
 }
