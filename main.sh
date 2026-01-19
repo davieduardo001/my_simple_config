@@ -17,6 +17,7 @@ fi
 
 # creating the sym link
 echo '** creating sym link for kitty'
+rm "$CONFIG_DIR/kitty/kitty.conf"
 ln -s "$DOTFILES_DIR/src/configs/kitty.conf" "$CONFIG_DIR/kitty/kitty.conf"
 
 ############################
@@ -54,6 +55,8 @@ fi
 echo '** creating sym link for nvim configs'
 rm "$CONFIG_DIR/nvim/lua/config/keymaps.lua"
 ln -s "$DOTFILES_DIR/src/configs/nvim_keybinds.lua" "$CONFIG_DIR/nvim/lua/config/keymaps.lua"
+rm -d "$CONFIG_DIR/nvim/lua/plugins/theme.lua"
+ln -s "$DOTFILES_DIR/src/configs/nvim_theme.lua" "$CONFIG_DIR/nvim/lua/plugins/theme.lua"
 
 # correcting the copy paste on nvim
 echo "* correcting the paste clip issue"
@@ -76,7 +79,7 @@ ZIP_FILE="/tmp/CaskaydiaCove.zip"
 
 intall_font() {
   if fc-list | grep -i "CaskaydiaCove Nerd Font" >/dev/null 2>&1; then
-    echo "$FONT_NAME is already installed. Skipping installation."
+    echo "** $FONT_NAME is already installed. Skipping installation."
     return
   fi
 
@@ -103,31 +106,32 @@ intall_font() {
 intall_font
 
 # Installing zsh
-echo "Starting Zsh installation..."
+echo "* Starting Zsh installation..."
 intall_zsh() {
   if command -v zsh &>/dev/null; then
-    echo "Zsh is already installed. Skipping installation."
-    echo "To make Zsh your default shell, run: chsh -s \$(which zsh)"
+    echo "** Zsh is already installed. Skipping installation."
+    echo "*** To make Zsh your default shell, run: chsh -s \$(which zsh)"
     return
   fi
 
-  yay -S zsh || echo "Failed to install Zsh."
+  yay -S zsh || echo "! Failed to install Zsh."
 
-  echo "Zsh installed successfully."
-  echo "To make Zsh your default shell, run: chsh -s \$(which zsh)"
+  echo "** Zsh installed successfully."
+  echo "** To make Zsh your default shell, run: chsh -s \$(which zsh)"
 }
 intall_zsh
 
 # Installing fastfetch
+echo "* Installing fastfetch"
 intall_fastfetch() {
   if command -v fastfetch &>/dev/null; then
-    "fastfetch is already installed. Skipping installation."
+    echo "** fastfetch is already installed. Skipping installation."
     return
   fi
 
-  yay -S fastfetch || echo "Failed to install fastfetch."
+  yay -S fastfetch || echo "! Failed to install fastfetch."
 
-  echo "fastfetch installed successfully."
+  echo "** fastfetch installed successfully."
 }
 intall_fastfetch
 
@@ -135,12 +139,14 @@ intall_fastfetch
 echo '** creating sym link for fastfetch configs'
 
 mkdir -p "$CONFIG_DIR/fastfetch"
+rm "$CONFIG_DIR/fastfetch/config.jsonc"
 ln -s "$DOTFILES_DIR/src/configs/fastfetch.jsonc" "$CONFIG_DIR/fastfetch/config.jsonc"
 
 # install falmeshot
+echo '* intall fastfetch'
 intall_flameshot() {
   if command -v flameshot &>/dev/null; then
-    "flameshot is already installed. Skipping installation."
+    echo "** flameshot is already installed. Skipping installation."
     return
   fi
 
