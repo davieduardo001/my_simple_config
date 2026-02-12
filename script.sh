@@ -1,322 +1,38 @@
 #!/bin/bash
-#
-# This script is the main entry point for setting up the environment.
-#
-set -e
 
-# Define colors
-if [[ -t 1 ]]; then
-  RED=$(tput setaf 1)
-  GREEN=$(tput setaf 2)
-  YELLOW=$(tput setaf 3)
-  CYAN=$(tput setaf 6)
-  RESET=$(tput sgr0)
+## Installing oh my bash
+OH_MY_BASH_DIR="$HOME/.oh-my-bash/"
+echo -e "\n* INTALLING OH-MY-BASH"
+if [ -d "$OH_MY_BASH_DIR" ]; then
+  echo "** oh my bash exists"
 else
-  RED=""
-  GREEN=""
-  YELLOW=""
-  CYAN=""
-  RESET=""
+  echo "oh my bash its not installed! Intalling it!"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+  echo "** oh my bash installed!!"
 fi
 
-# --- Helper Functions ---
-info() { echo "✨ ${GREEN}[INFO]${RESET} $1"; }
-warn() { echo "⚠️  ${YELLOW}[WARN]${RESET} $1"; }
-error() {
-  echo "❌ ${RED}[ERROR]${RESET} $1" >&2
-  exit 1
-}
-action_required() { echo "🚀 ${CYAN}[ACTION]${RESET} $1"; }
-
-# --- Main Setup ---
-info "Starting environment setup..."
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-SCRIPTS_SUBDIR="$SCRIPT_DIR/src/scripts"
-
-# Make all installation scripts executable before running them
-info "Setting execute permissions for installation scripts..."
-for script in "$SCRIPTS_SUBDIR"/*.sh; do
-  if [ -f "$script" ]; then
-    chmod +x "$script"
-    info "Made $script executable."
-  fi
-done
-
-# --- Oh My Zsh Installation ---
-install_oh_my_zsh() {
-  if [ -d "$HOME/.oh-my-zsh" ]; then
-    info "Oh My Zsh is already installed. Skipping."
-  else
-    action_required "Oh My Zsh is not installed. Installing..."
-    # Using the --unattended flag to prevent the installer from trying to change the shell
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  fi
-}
-
-# --- Set Default Shell ---
-set_default_shell() {
-  if ! command -v zsh &>/dev/null; then
-    warn "Zsh is not installed. Cannot set it as default."
-    return
-  fi
-
-  local zsh_path
-  zsh_path=$(which zsh)
-  local current_shell
-  current_shell=$(getent passwd "$USER" | cut -d: -f7)
-
-  if [ "$current_shell" == "$zsh_path" ]; then
-    info "Zsh is already the default shell. Nothing to do. ✅"
-    return
-  fi
-
-  action_required "Do you want to make Zsh your default shell?"
-  # Ask the user for confirmation
-  read -p "Enter [y/N] to confirm: " -n 1 -r
-  echo # Move to a new line
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    info "Changing default shell to Zsh..."
-    if chsh -s "$zsh_path"; then
-      info "Default shell changed to Zsh successfully."
-      warn "You will need to log out and log back in for the change to take full effect."
-    else
-      error "Failed to change the default shell. Please try running 'chsh -s $zsh_path' manually."
-    fi
-  else
-    warn "Skipping default shell change."
-  fi
-}
-
-# --- NVM & Node Installation ---
-install_nvm_node() {
-  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-
-  # 1. Install NVM if not present
-  if [ -d "$NVM_DIR" ]; then
-    info "NVM is already installed. Skipping download."
-  else
-    action_required "NVM is not installed. Installing..."
-    # The nvm installer script complains if NVM_DIR is set but the directory doesn't exist.
-    # We run the installer in a subshell where NVM_DIR is unset.
-    # The installer will then use the default location ($HOME/.nvm), which is what we want.
-    (unset NVM_DIR; curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash)
-  fi
-
-  # 2. Load NVM into the current script session
-  # This is required because nvm is a function, not a binary, and isn't available
-  # immediately after install without sourcing.
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
-    \. "$NVM_DIR/nvm.sh"
-  else
-    error "NVM script not found at $NVM_DIR/nvm.sh"
-  fi
-
-  # 3. Install Node LTS if npm is not available
-  if command -v npm &> /dev/null; then
-    info "npm is already installed. Skipping Node.js installation."
-    info "Node.js $(node -v) and npm $(npm -v) are already installed. ✅"
-  else
-    info "Installing Node.js LTS..."
-    nvm install --lts
-    nvm use --lts
-    nvm alias default 'lts/*' # Ensure this version sticks as default for new shells
-    info "Node.js $(node -v) and npm $(npm -v) installed successfully. ✅"
-  fi
-}
-
-install_nvm_node
-
-# --- Gemini CLI Installation ---
-install_gemini_cli() {
-  info "Checking for Google Gemini CLI..."
-
-  # Ensure npm is accessible (redundant check, but safe)
-  if ! command -v npm &>/dev/null; then
-    # Attempt to load nvm one more time if npm is missing
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  fi
-
-  if ! command -v npm &>/dev/null; then
-    error "npm is not accessible. Cannot install Gemini CLI."
-  fi
-
-  # Check if the package is already installed globally
-  if npm list -g @google/gemini-cli --depth=0 >/dev/null 2>&1; then
-    info "Gemini CLI is already installed. Skipping."
-  else
-    action_required "Installing Google Gemini CLI..."
-    if npm install -g @google/gemini-cli; then
-      info "Gemini CLI installed successfully. ✅"
-    else
-      error "Failed to install Gemini CLI."
-    fi
-  fi
-}
-
-install_gemini_cli
-
-# --- Installation Logic ---
-info "Starting standard installation..."
-"$SCRIPTS_SUBDIR/install_zsh.sh"
-"$SCRIPTS_SUBDIR/install_fastfetch.sh"
-"$SCRIPTS_SUBDIR/install_nvim.sh"
-"$SCRIPTS_SUBDIR/install_kitty.sh"
-
-# Common installation scripts
-"$SCRIPTS_SUBDIR/install_fonts_caskaydia.sh"
-"$SCRIPTS_SUBDIR/install_fonts_fira.sh"
-
-# Install Oh My Zsh after Zsh binary is installed
-install_oh_my_zsh
-
-# --- LazyVim Installation ---
-install_lazyvim() {
-    if [ -d "$HOME/.config/nvim/lua/lazyvim" ]; then
-        info "LazyVim is already installed. Skipping."
-        return
-    fi
-
-    # Check if a backup of nvim config already exists
-    if [ -d "$HOME/.config/nvim.bak" ] || \
-       [ -d "$HOME/.local/share/nvim.bak" ] || \
-       [ -d "$HOME/.local/state/nvim.bak" ] || \
-       [ -d "$HOME/.cache/nvim.bak" ]; then
-        warn "Existing Neovim backup directories found. Skipping LazyVim installation."
-        return
-    fi
-
-    action_required "Installing LazyVim..."
-    
-    # required
-    if [ -d "$HOME/.config/nvim" ]; then
-        mv ~/.config/nvim{,.bak}
-        info "Backed up existing nvim config to ~/.config/nvim.bak"
-    fi
-
-    # optional but recommended
-    if [ -d "$HOME/.local/share/nvim" ]; then
-        mv ~/.local/share/nvim{,.bak}
-        info "Backed up existing nvim share dir to ~/.local/share/nvim.bak"
-    fi
-    if [ -d "$HOME/.local/state/nvim" ]; then
-        mv ~/.local/state/nvim{,.bak}
-        info "Backed up existing nvim state dir to ~/.local/state/nvim.bak"
-    fi
-    if [ -d "$HOME/.cache/nvim" ]; then
-        mv ~/.cache/nvim{,.bak}
-        info "Backed up existing nvim cache dir to ~/.cache/nvim.bak"
-    fi
-
-    git clone https://github.com/LazyVim/starter ~/.config/nvim || error "Failed to clone LazyVim starter."
-
-    rm -rf ~/.config/nvim/.git
-    
-    info "LazyVim installed successfully."
-}
-
-install_lazyvim
-
-# --- Configuration File Deployment ---
-info "Deploying configuration files..."
-
-# Deploy zshrc
-if command -v zsh &>/dev/null; then
-  ZSHRC_SOURCE="$SCRIPT_DIR/src/config/zsh/zshrc"
-  ZSHRC_DEST="$HOME/.zshrc"
-
-  # Backup original zshrc if it exists and is not a symlink
-  if [ -f "$ZSHRC_DEST" ] && [ ! -L "$ZSHRC_DEST" ]; then
-    mv "$ZSHRC_DEST" "$ZSHRC_DEST.bak"
-    info "Backed up existing .zshrc to .zshrc.bak"
-  fi
-
-  ln -sf "$ZSHRC_SOURCE" "$ZSHRC_DEST"
-  info ".zshrc deployed."
+## Intalling sdkman
+SDKMAN_DIR="$HOME/.sdkman/"
+echo -e "\n* INTALLING SDKMAN"
+if [ -d "$OH_MY_BASH_DIR" ]; then
+  echo "** sdkman exists"
 else
-  warn "Zsh not found. Skipping .zshrc deployment."
+  echo "sdkman its not installed! Intalling it!"
+  curl -s "https://get.sdkman.io" | bash
+  echo "** sdkman installed!!"
 fi
 
-# Deploy nvim configs
-deploy_nvim_configs() {
-    if ! command -v nvim &>/dev/null; then
-        warn "Neovim not found. Skipping Neovim configuration deployment."
-        return
-    fi
-
-    info "Deploying Neovim configuration files..."
-
-    local config_dir="$HOME/.config/nvim/lua/config"
-    local plugins_dir="$HOME/.config/nvim/lua/plugins"
-    local nvim_configs_src="$SCRIPT_DIR/src/config/nvim-configs"
-
-    mkdir -p "$config_dir"
-    mkdir -p "$plugins_dir"
-
-    ln -sf "$nvim_configs_src/keymaps.lua" "$config_dir/keymaps.lua"
-    info "Neovim keymaps deployed."
-
-    ln -sf "$nvim_configs_src/options.lua" "$config_dir/options.lua"
-    info "Neovim options deployed."
-
-    ln -sf "$nvim_configs_src/theme.lua" "$plugins_dir/theme.lua"
-    info "Neovim theme deployed."
-}
-
-deploy_nvim_configs
-
-# Deploy kitty config
-deploy_kitty_configs() {
-    if ! command -v kitty &>/dev/null; then
-        warn "Kitty not found. Skipping Kitty configuration deployment."
-        return
-    fi
-
-    info "Deploying Kitty configuration files..."
-
-    local config_dir="$HOME/.config/kitty"
-    local kitty_config_src="$SCRIPT_DIR/src/config/kitty/kitty.conf"
-
-    mkdir -p "$config_dir"
-
-    ln -sf "$kitty_config_src" "$config_dir/kitty.conf"
-    info "Kitty config deployed."
-}
-
-deploy_kitty_configs
-
-# Deploy fastfetch config
-deploy_fastfetch_configs() {
-    if ! command -v fastfetch &>/dev/null; then
-        warn "Fastfetch not found. Skipping Fastfetch configuration deployment."
-        return
-    fi
-
-    info "Deploying Fastfetch configuration files..."
-
-    local config_dir="$HOME/.config/fastfetch"
-    local fastfetch_config_src="$SCRIPT_DIR/src/config/fastfetch"
-
-    mkdir -p "$config_dir"
-    mkdir -p "$config_dir/ascii"
-    mkdir -p "$config_dir/png"
-
-    ln -sf "$fastfetch_config_src/fastfetch.jsonc" "$config_dir/fastfetch.jsonc"
-    info "Fastfetch config deployed."
-
-    ln -sf "$fastfetch_config_src/ascii/cute.txt" "$config_dir/ascii/cute.txt"
-    info "Fastfetch ascii art deployed."
-
-    ln -sf "$fastfetch_config_src/png/pfp.png" "$config_dir/png/pfp.png"
-    info "Fastfetch pfp deployed."
-}
-
-deploy_fastfetch_configs
-# --- Final Steps ---
-# Set Zsh as default shell if the user wants
-set_default_shell
-
-info "Environment setup complete! ✅"
-warn "Please restart your terminal or source your shell profile for all changes to take effect. 🔄"
-action_required "Please close and reopen your terminal window, or log out and log back in. 👇"
+## Download my fonts
+FONT_INSTALLED="$HOME/.local/share/fonts/installed.txt"
+echo -e "\n* INTALLING FONT"
+if [ -f "$FONT_INSTALLED" ]; then
+  echo "** your font its already installed!"
+else
+  echo "** your font its not installed.. intalling it!"
+  wget -O /tmp/CascadiaCode.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CascadiaCode.zip
+  unzip /tmp/CascadiaCode.zip -d /tmp/CascadiaCode/
+  mv /tmp/CascadiaCode/*.ttf $HOME/.local/share/fonts/
+  touch FONT_INSTALLED
+  rm -rf /tmp/CascadiaCode.zip
+  rm -rf /tmp/CascadiaCode/
+fi
