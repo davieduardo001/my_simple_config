@@ -1,0 +1,12 @@
+---
+- name: Install reflector
+  become: true
+  community.general.pacman:
+    name: reflector
+    state: present
+
+- name: Update mirrorlist via reflector (Brazil, HTTPS, sorted by rate)
+  become: true
+  ansible.builtin.command:
+    cmd: reflector --country Brazil --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+  changed_when: true

@@ -1,0 +1,1 @@
+/home/doritos/config/src/config/fastfetch/ascii/cute.txt

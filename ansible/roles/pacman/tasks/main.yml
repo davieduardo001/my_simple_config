@@ -1,0 +1,22 @@
+---
+- name: Enable Color in pacman.conf
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#?Color'
+    line: Color
+
+- name: Add ILoveCandy after Color
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    insertafter: '^Color'
+    line: ILoveCandy
+    state: present
+
+- name: Enable ParallelDownloads
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#?ParallelDownloads.*'
+    line: 'ParallelDownloads = 10'

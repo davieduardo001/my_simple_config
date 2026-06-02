@@ -1,0 +1,31 @@
+---
+- name: Arch Linux Dev Environment
+  hosts: localhost
+  connection: local
+  become: false
+  vars:
+    repo_root: "{{ playbook_dir | dirname }}"
+
+  pre_tasks:
+    - name: Verify Arch Linux
+      ansible.builtin.fail:
+        msg: "This playbook is designed for Arch Linux. Set SKIP_OS_CHECK=1 to override."
+      when:
+        - ansible_distribution != "Archlinux"
+        - lookup('env', 'SKIP_OS_CHECK') != '1'
+
+  roles:
+    - mirrors
+    - pacman
+    - paru
+    - packages
+    - aur_packages
+    - node
+    - pyenv
+    - bun
+    - rust
+    - oh_my_bash
+    - fonts
+    - dotfiles
+    - { role: github_cli, tags: [github_cli, interactive] }
+    - { role: claude,     tags: [claude] }

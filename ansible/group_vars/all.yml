@@ -1,0 +1,39 @@
+---
+# --- Pacman packages ---
+pacman_packages:
+  - base-devel
+  - git
+  - curl
+  - wget
+  - unzip
+  - openssl
+  - zlib
+  - xz
+  - readline
+  - sqlite
+  - github-cli
+  - fastfetch
+  - fontconfig
+  - starship
+  - eza
+  - bat
+  - zoxide
+  - fzf
+  - btop
+  - timeshift
+  - reflector
+
+# --- AUR packages ---
+aur_packages:
+  - brave-bin
+  - visual-studio-code-bin
+  - ghostty
+
+# --- Nerd Fonts ---
+nerd_fonts_version: "v3.4.0"
+nerd_fonts:
+  - CaskaydiaCove
+  - JetBrainsMono
+
+# --- NVM ---
+nvm_version: "v0.40.1"

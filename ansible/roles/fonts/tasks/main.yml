@@ -1,0 +1,55 @@
+---
+- name: Ensure user fonts directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/share/fonts"
+    state: directory
+    mode: '0755'
+
+- name: Check for existing Nerd Fonts installation
+  ansible.builtin.find:
+    paths: "{{ ansible_env.HOME }}/.local/share/fonts"
+    patterns: "*NerdFont*"
+  register: existing_fonts
+
+- name: Download Nerd Fonts zips
+  ansible.builtin.get_url:
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nerd_fonts_version }}/{{ item }}.zip"
+    dest: "/tmp/{{ item }}.zip"
+    mode: '0644'
+  loop: "{{ nerd_fonts }}"
+  when: existing_fonts.matched == 0
+
+- name: Ensure unzip temp directory
+  ansible.builtin.file:
+    path: /tmp/fonts-unzip
+    state: directory
+    mode: '0755'
+  when: existing_fonts.matched == 0
+
+- name: Extract Nerd Fonts
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ item }}.zip"
+    dest: /tmp/fonts-unzip/
+  loop: "{{ nerd_fonts }}"
+  when: existing_fonts.matched == 0
+
+- name: Move font files to user fonts directory
+  ansible.builtin.shell:
+    cmd: "find /tmp/fonts-unzip -type f \\( -name '*.ttf' -o -name '*.otf' \\) -exec mv {} {{ ansible_env.HOME }}/.local/share/fonts/ \\;"
+    executable: /bin/bash
+  when: existing_fonts.matched == 0
+
+- name: Clean up temp files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /tmp/fonts-unzip
+  loop_control:
+    label: "{{ item }}"
+  when: existing_fonts.matched == 0
+
+- name: Rebuild font cache
+  ansible.builtin.command: fc-cache -fv
+  changed_when: true
+  when: existing_fonts.matched == 0

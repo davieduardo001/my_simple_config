@@ -1,0 +1,21 @@
+# --- Font ---
+font-family = JetBrainsMono Nerd Font
+font-size = 11
+
+# --- Theme ---
+theme = TokyoNight
+
+# --- Cursor ---
+cursor-style = block
+cursor-style-blink = true
+
+# --- Window ---
+background-opacity = 0.85
+window-padding-x = 10
+window-padding-y = 10
+
+# --- Scrollback ---
+scrollback-limit = 10000
+
+# --- Shell integration ---
+shell-integration = bash

@@ -1,0 +1,35 @@
+---
+- name: Check if paru is installed
+  ansible.builtin.command: which paru
+  register: paru_check
+  changed_when: false
+  failed_when: false
+
+- name: Install build dependencies for paru
+  become: true
+  community.general.pacman:
+    name:
+      - git
+      - base-devel
+    state: present
+  when: paru_check.rc != 0
+
+- name: Clone paru from AUR
+  ansible.builtin.git:
+    repo: https://aur.archlinux.org/paru.git
+    dest: /tmp/paru
+    version: HEAD
+  when: paru_check.rc != 0
+
+- name: Build and install paru
+  ansible.builtin.shell:
+    cmd: makepkg -si --noconfirm
+    chdir: /tmp/paru
+    executable: /bin/bash
+  when: paru_check.rc != 0
+
+- name: Remove paru build directory
+  ansible.builtin.file:
+    path: /tmp/paru
+    state: absent
+  when: paru_check.rc != 0

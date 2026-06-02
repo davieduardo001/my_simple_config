@@ -1,0 +1,11 @@
+---
+- name: Check if oh-my-bash is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.oh-my-bash"
+  register: omb_stat
+
+- name: Install oh-my-bash (unattended)
+  ansible.builtin.shell:
+    cmd: 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended'
+    executable: /bin/bash
+  when: not omb_stat.stat.exists

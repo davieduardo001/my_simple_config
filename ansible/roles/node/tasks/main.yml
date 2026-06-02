@@ -1,0 +1,25 @@
+---
+- name: Check if NVM is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  register: nvm_stat
+
+- name: Install NVM
+  ansible.builtin.shell:
+    cmd: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash"
+    executable: /bin/bash
+  when: not nvm_stat.stat.exists
+
+- name: Check if Node LTS alias exists
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.nvm/alias/default"
+  register: node_stat
+
+- name: Install Node.js LTS via NVM
+  ansible.builtin.shell:
+    cmd: |
+      export NVM_DIR="{{ ansible_env.HOME }}/.nvm"
+      source "$NVM_DIR/nvm.sh"
+      nvm install --lts && nvm alias default lts/*
+    executable: /bin/bash
+  when: not node_stat.stat.exists

@@ -1,0 +1,31 @@
+---
+- name: Ensure ~/.config directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config"
+    state: directory
+    mode: '0755'
+
+- name: Backup existing .bashrc (if not already a symlink)
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.bashrc"
+    dest: "{{ ansible_env.HOME }}/.bashrc.bak"
+    remote_src: true
+    force: false
+  failed_when: false
+
+- name: Link .bashrc
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/bash/bashrc"
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    state: link
+    force: true
+
+- name: Link app configs into ~/.config
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.config/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - fastfetch
+    - ghostty

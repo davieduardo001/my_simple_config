@@ -1,0 +1,11 @@
+---
+- name: Check if Rust is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+  register: rust_stat
+
+- name: Install Rust via rustup
+  ansible.builtin.shell:
+    cmd: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path"
+    executable: /bin/bash
+  when: not rust_stat.stat.exists

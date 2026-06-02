@@ -1,0 +1,11 @@
+---
+- name: Check if pyenv is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.pyenv/bin/pyenv"
+  register: pyenv_stat
+
+- name: Install pyenv
+  ansible.builtin.shell:
+    cmd: curl https://pyenv.run | bash
+    executable: /bin/bash
+  when: not pyenv_stat.stat.exists

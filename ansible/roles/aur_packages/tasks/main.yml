@@ -1,0 +1,8 @@
+---
+- name: Install AUR packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item }}"
+    executable: /bin/bash
+  loop: "{{ aur_packages }}"
+  register: paru_result
+  changed_when: "'nothing to do' not in paru_result.stdout | lower"
