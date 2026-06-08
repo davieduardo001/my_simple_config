@@ -19,7 +19,9 @@
     - pacman
     - paru
     - packages
+    - sudoers
     - aur_packages
+    - { role: sudoers, vars: { sudoers_state: absent } }
     - node
     - pyenv
     - bun

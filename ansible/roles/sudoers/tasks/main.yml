@@ -1,0 +1,17 @@
+---
+- name: Allow passwordless pacman for AUR builds
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/ansible-aur
+    line: "{{ ansible_user_id }} ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+    create: true
+    validate: "visudo -cf %s"
+    mode: "0440"
+  when: sudoers_state | default('present') == 'present'
+
+- name: Remove passwordless pacman rule
+  become: true
+  ansible.builtin.file:
+    path: /etc/sudoers.d/ansible-aur
+    state: absent
+  when: sudoers_state | default('present') == 'absent'
