@@ -30,7 +30,7 @@ cursor-style-blink = true
 background-opacity = 1
 window-padding-x = 10
 window-padding-y = 10
-window-decoration = none
+window-decoration = auto
 
 # --- Scrollback ---
 scrollback-limit = 10000
