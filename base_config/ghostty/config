@@ -2,25 +2,25 @@
 font-family = JetBrainsMono Nerd Font
 font-size = 11
 
-# --- Theme (macOS Terminal - Pro) ---
-background = #000000
-foreground = #F2F2F2
-palette = 0=#000000
-palette = 1=#990000
-palette = 2=#00A600
-palette = 3=#999900
-palette = 4=#3B6FD4
-palette = 5=#B200B2
-palette = 6=#00A6B2
-palette = 7=#BFBFBF
-palette = 8=#666666
-palette = 9=#E50000
-palette = 10=#00D900
-palette = 11=#E5E500
-palette = 12=#0000FF
-palette = 13=#E500E5
-palette = 14=#00E5E5
-palette = 15=#E5E5E5
+# --- Theme (GitHub Dark) ---
+background = #0d1117
+foreground = #e6edf3
+palette = 0=#484f58
+palette = 1=#ff7b72
+palette = 2=#3fb950
+palette = 3=#d29922
+palette = 4=#58a6ff
+palette = 5=#bc8cff
+palette = 6=#39c5cf
+palette = 7=#b1bac4
+palette = 8=#6e7681
+palette = 9=#ffa198
+palette = 10=#56d364
+palette = 11=#e3b341
+palette = 12=#79c0ff
+palette = 13=#d2a8ff
+palette = 14=#56d4dd
+palette = 15=#f0f6fc
 
 # --- Cursor ---
 cursor-style = block
@@ -37,3 +37,6 @@ scrollback-limit = 10000
 
 # --- Shell integration ---
 shell-integration = bash
+
+background-opacity = 0.8
+background-blur-radius = 0
