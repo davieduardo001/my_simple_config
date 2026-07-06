@@ -7,6 +7,10 @@
 
   
 {
+    "logo": {
+        "type": "builtin",
+        "source": "Apple_small",
+    },
     "display": {
           "separator": " ➜  "
     },

@@ -4,6 +4,9 @@ case $- in
 *) return ;;
 esac
 
+# --- Disable Ctrl+Z suspend (SIGTSTP) ---
+stty susp undef
+
 # --- Oh-My-Bash ---
 export OSH="$HOME/.oh-my-bash"
 OSH_THEME=""  # desativado — starship cuida do prompt
@@ -67,3 +70,7 @@ fastfetch
 
 # --- Starship prompt (deve ser o último) ---
 command -v starship &>/dev/null && eval "$(starship init bash)"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

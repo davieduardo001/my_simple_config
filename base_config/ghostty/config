@@ -2,32 +2,35 @@
 font-family = JetBrainsMono Nerd Font
 font-size = 11
 
-# --- Theme (GitHub Dark) ---
-background = #0d1117
-foreground = #e6edf3
-palette = 0=#484f58
-palette = 1=#ff7b72
-palette = 2=#3fb950
-palette = 3=#d29922
-palette = 4=#58a6ff
-palette = 5=#bc8cff
-palette = 6=#39c5cf
-palette = 7=#b1bac4
-palette = 8=#6e7681
-palette = 9=#ffa198
-palette = 10=#56d364
-palette = 11=#e3b341
-palette = 12=#79c0ff
-palette = 13=#d2a8ff
-palette = 14=#56d4dd
-palette = 15=#f0f6fc
+# --- Theme (Min Dark) ---
+background = #1f1f1f
+foreground = #d4d4d4
+cursor-color = #fafafa
+selection-background = #2a2a2a
+selection-foreground = #f5f5f5
+
+palette = 0=#1a1a1a
+palette = 1=#f97583
+palette = 2=#8fae6a
+palette = 3=#ffab70
+palette = 4=#79b8ff
+palette = 5=#b392f0
+palette = 6=#9db1c5
+palette = 7=#b0b0b0
+palette = 8=#5c5c5c
+palette = 9=#ff7a84
+palette = 10=#a8d477
+palette = 11=#ffcb99
+palette = 12=#a3d1ff
+palette = 13=#d1baf7
+palette = 14=#c3d3e0
+palette = 15=#fafafa
 
 # --- Cursor ---
 cursor-style = block
 cursor-style-blink = true
 
 # --- Window ---
-background-opacity = 1
 window-padding-x = 10
 window-padding-y = 10
 window-decoration = auto
@@ -37,6 +40,3 @@ scrollback-limit = 10000
 
 # --- Shell integration ---
 shell-integration = bash
-
-background-opacity = 0.8
-background-blur-radius = 0
