@@ -1,0 +1,8 @@
+---
+- name: Install Podman
+  become: true
+  community.general.pacman:
+    name:
+      - podman
+      - podman-compose
+    state: present

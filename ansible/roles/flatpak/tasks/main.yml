@@ -1,0 +1,28 @@
+---
+- name: Install Flatpak
+  become: true
+  community.general.pacman:
+    name: flatpak
+    state: present
+
+- name: Add Flathub remote
+  become: true
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+
+- name: Install Flatpak apps (both profiles)
+  become: true
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ flatpak_apps }}"
+
+- name: Install Flatpak apps (server profile only)
+  become: true
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ flatpak_apps_server }}"
+  when: install_profile == 'server'

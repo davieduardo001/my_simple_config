@@ -37,3 +37,24 @@ nerd_fonts:
 
 # --- NVM ---
 nvm_version: "v0.40.1"
+
+# --- Icon/cursor/GTK theming (DE-agnostic assets) ---
+theming_aur_packages:
+  - mcmojave-circle-icon-theme-git
+  - whitesur-icon-theme-git
+  - fluent-icon-theme-git
+  - quintom-cursor-theme-git
+  - apple_cursor
+
+theming_icon_theme: "McMojave-circle"
+theming_cursor_theme: "macOS"
+theming_gtk_theme: "Adwaita"
+
+# --- Flatpak apps (both profiles) ---
+flatpak_apps:
+  - app.zen_browser.zen
+
+# --- Flatpak apps: server profile only (TV box media) ---
+flatpak_apps_server:
+  - org.libretro.RetroArch
+  - tv.kodi.Kodi

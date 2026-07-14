@@ -35,6 +35,14 @@ configure_pacman() {
     ok "pacman configurado (Color, ILoveCandy, ParallelDownloads=10)!!"
 }
 
+# --- 1b. Configurar makepkg (desliga pacote de debug — inútil e lento em pacotes ---
+# ---     AUR com muitos arquivos, tipo temas de ícone) ---
+configure_makepkg() {
+    log "CONFIGURANDO MAKEPKG (desativando pacote de debug)"
+    sudo sed -i 's/ debug / !debug /' /etc/makepkg.conf
+    ok "Pacote de debug desativado — builds AUR com muitos arquivos ficam bem mais rápidos"
+}
+
 # --- 2. paru (AUR helper, feito em Rust) ---
 install_paru() {
     log "INSTALANDO PARU (AUR HELPER)"
@@ -202,6 +210,12 @@ install_ombash() {
 install_fonts() {
     log "INSTALANDO NERD FONTS (CaskaydiaCove + JetBrainsMono)"
     local fonts_dir="$HOME/.local/share/fonts"
+
+    if find "$fonts_dir" -iname "*NerdFont*" 2>/dev/null | grep -q .; then
+        ok "Nerd Fonts já instaladas."
+        return
+    fi
+
     mkdir -p "$fonts_dir" /tmp/fonts-unzip
 
     wget -q --show-progress -L -O /tmp/CaskaydiaCove.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CaskaydiaCove.zip
@@ -216,7 +230,90 @@ install_fonts() {
     ok "Fontes instaladas!!"
 }
 
-# --- 14. Aplicar configurações (symlinks) ---
+# --- 14. Ícones/cursor (AUR) + aplicar tema (GNOME ou XFCE) ---
+THEMING_AUR_PACKAGES=(
+    mcmojave-circle-icon-theme-git
+    whitesur-icon-theme-git
+    fluent-icon-theme-git
+    quintom-cursor-theme-git
+    apple_cursor
+)
+THEME_ICON="McMojave-circle"
+THEME_CURSOR="macOS"
+THEME_GTK="Adwaita"
+
+install_theming_packages() {
+    log "INSTALANDO TEMAS DE ÍCONE/CURSOR (AUR)"
+    paru -S --needed --noconfirm "${THEMING_AUR_PACKAGES[@]}"
+    ok "Pacotes de tema instalados!!"
+}
+
+apply_theme() {
+    log "APLICANDO TEMA (ícones/cursor/GTK)"
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+        warn "Nenhuma sessão gráfica detectada — pulando aplicação automática de tema."
+        return
+    fi
+
+    case "$XDG_CURRENT_DESKTOP" in
+        *GNOME*)
+            gsettings set org.gnome.desktop.interface icon-theme "$THEME_ICON"
+            gsettings set org.gnome.desktop.interface cursor-theme "$THEME_CURSOR"
+            gsettings set org.gnome.desktop.interface gtk-theme "$THEME_GTK"
+            ok "Tema aplicado via gsettings (GNOME)"
+            ;;
+        *XFCE*)
+            xfconf-query -c xsettings -p /Net/IconThemeName -s "$THEME_ICON"
+            xfconf-query -c xsettings -p /Net/ThemeName -s "$THEME_GTK"
+            xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "$THEME_CURSOR"
+            ok "Tema aplicado via xfconf-query (XFCE)"
+            warn "xfwm4 (bordas de janela) usa catálogo próprio de temas — confira em Configurações > Gerenciador de Janelas"
+            ;;
+        *)
+            warn "Interface gráfica '$XDG_CURRENT_DESKTOP' não reconhecida — pulei a aplicação automática de tema."
+            ;;
+    esac
+}
+
+# --- 15. Flatpak (Zen Browser sempre + Kodi/RetroArch no perfil server) ---
+FLATPAK_APPS=(
+    app.zen_browser.zen
+)
+FLATPAK_APPS_SERVER=(
+    org.libretro.RetroArch
+    tv.kodi.Kodi
+)
+
+install_flatpak() {
+    log "INSTALANDO FLATPAK + ZEN BROWSER"
+    sudo pacman -S --needed --noconfirm flatpak
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    sudo flatpak install -y flathub "${FLATPAK_APPS[@]}"
+    ok "Flatpak + Zen Browser instalados!!"
+}
+
+install_flatpak_server_apps() {
+    log "INSTALANDO KODI + RETROARCH (FLATPAK)"
+    sudo flatpak install -y flathub "${FLATPAK_APPS_SERVER[@]}"
+    ok "Kodi + RetroArch instalados!!"
+}
+
+# --- 16. SSH (perfil server) ---
+install_ssh() {
+    log "INSTALANDO E HABILITANDO SSH"
+    sudo pacman -S --needed --noconfirm openssh
+    sudo systemctl enable --now sshd
+    ok "SSH habilitado (sshd rodando)!!"
+}
+
+# --- 17. Podman (perfil server) ---
+install_podman() {
+    log "INSTALANDO PODMAN"
+    sudo pacman -S --needed --noconfirm podman podman-compose
+    ok "Podman instalado!!"
+}
+
+# --- 18. Aplicar configurações (symlinks) ---
 apply_config() {
     local src="$1"
     local desc="$2"
@@ -274,7 +371,28 @@ setup_system() {
         [[ "$resp" =~ ^[Ss]$ ]] || { echo "Abortando."; exit 1; }
     fi
 
+    local profile="$1"
+    if [[ -z "$profile" ]]; then
+        echo
+        echo "Tipo de instalação:"
+        PS3="Escolha [1-2]: "
+        select opt in \
+            "Normal (desktop completo)" \
+            "Server (TV box: tudo do normal + SSH + Podman + Kodi/RetroArch)"; do
+            case "$REPLY" in
+                1) profile="normal"; break ;;
+                2) profile="server"; break ;;
+                *) echo "Opção inválida." ;;
+            esac
+        done
+    fi
+
+    log "AUTENTICANDO SUDO"
+    sudo -v || { err "Senha de sudo incorreta ou indisponível."; exit 1; }
+    ok "Sudo autenticado — não deve pedir senha de novo durante a instalação"
+
     configure_pacman           # Color, ILoveCandy, ParallelDownloads=10
+    configure_makepkg          # desativa pacote de debug (builds AUR mais rápidos)
     install_paru               # AUR helper (Rust)
     install_system_packages    # pacman: gh, starship, eza, bat, zoxide, fzf, btop, timeshift...
     install_aur_packages       # paru: brave, vscode, wezterm
@@ -287,7 +405,16 @@ setup_system() {
     install_claude_plugins     # claude-mem, context-mode, RTK
     install_ombash             # oh-my-bash
     install_fonts              # Nerd Fonts
+    install_theming_packages   # paru: ícones/cursor (McMojave, WhiteSur, Fluent, apple_cursor...)
+    apply_theme                # gsettings (GNOME) ou xfconf-query (XFCE), conforme detectado
+    install_flatpak            # flatpak + flathub + Zen Browser (sempre)
     apply_config "$BASE_CONFIG" "CONFIGURAÇÕES"
+
+    if [[ "$profile" == "server" ]]; then
+        install_ssh                    # sshd habilitado
+        install_podman                 # containers via Podman
+        install_flatpak_server_apps    # Kodi + RetroArch
+    fi
 
     log "Tudo pronto! Reinicie o terminal."
     log "Lembre-se de rodar: source ~/.bashrc"
@@ -295,20 +422,30 @@ setup_system() {
 
 # --- Menu ---
 case "$1" in
-    setup)   setup_system ;;
-    gh)      setup_gh ;;
-    claude)  install_claude && install_claude_plugins ;;
-    fonts)   install_fonts ;;
-    config)  apply_config "$BASE_CONFIG" "CONFIGURAÇÕES" ;;
-    mirrors) setup_mirrors ;;
+    setup)    setup_system "$2" ;;
+    gh)       setup_gh ;;
+    claude)   install_claude && install_claude_plugins ;;
+    fonts)    install_fonts ;;
+    theme)    install_theming_packages && apply_theme ;;
+    makepkg)  configure_makepkg ;;
+    flatpak)  install_flatpak ;;
+    ssh)      install_ssh ;;
+    podman)   install_podman ;;
+    config)   apply_config "$BASE_CONFIG" "CONFIGURAÇÕES" ;;
+    mirrors)  setup_mirrors ;;
     *)
-        echo "Uso: $0 {setup|gh|claude|fonts|config|mirrors}"
+        echo "Uso: $0 {setup [normal|server]|gh|claude|fonts|theme|makepkg|flatpak|ssh|podman|config|mirrors}"
         echo ""
-        echo "  setup   - Instalação completa (Arch Linux)"
-        echo "  gh      - Configura GitHub CLI"
-        echo "  claude  - Instala Claude Code + plugins globais"
-        echo "  fonts   - Instala Nerd Fonts"
-        echo "  config  - Aplica symlinks das configs"
-        echo "  mirrors - Atualiza mirrorlist via reflector"
+        echo "  setup [normal|server] - Instalação completa (pede pra escolher o perfil se omitido)"
+        echo "  gh       - Configura GitHub CLI"
+        echo "  claude   - Instala Claude Code + plugins globais"
+        echo "  fonts    - Instala Nerd Fonts"
+        echo "  theme    - Instala ícones/cursor (AUR) e aplica (GNOME/XFCE)"
+        echo "  makepkg  - Desativa pacote de debug do makepkg (builds AUR mais rápidos)"
+        echo "  flatpak  - Instala Flatpak + Zen Browser"
+        echo "  ssh      - Instala e habilita SSH (perfil server)"
+        echo "  podman   - Instala Podman (perfil server)"
+        echo "  config   - Aplica symlinks das configs"
+        echo "  mirrors  - Atualiza mirrorlist via reflector"
         ;;
 esac

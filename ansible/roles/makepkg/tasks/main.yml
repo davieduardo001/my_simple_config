@@ -1,0 +1,7 @@
+---
+- name: Disable makepkg debug package generation
+  become: true
+  ansible.builtin.replace:
+    path: /etc/makepkg.conf
+    regexp: '(?<!!)\bdebug\b'
+    replace: '!debug'

@@ -6,7 +6,21 @@
   vars:
     repo_root: "{{ playbook_dir | dirname }}"
 
+  vars_prompt:
+    - name: install_profile_choice
+      prompt: |
+        Tipo de instalação:
+          1) normal — desktop completo (dev tooling + GUI + tema)
+          2) server — TV box (tudo do normal + SSH + Podman + Kodi/RetroArch)
+        Escolha [1]
+      default: "1"
+      private: no
+
   pre_tasks:
+    - name: Resolve install profile
+      ansible.builtin.set_fact:
+        install_profile: "{{ 'server' if install_profile_choice == '2' else 'normal' }}"
+
     - name: Verify Arch Linux
       ansible.builtin.fail:
         msg: "This playbook is designed for Arch Linux. Set SKIP_OS_CHECK=1 to override."
@@ -17,10 +31,12 @@
   roles:
     - mirrors
     - pacman
+    - makepkg
     - paru
     - packages
     - sudoers
     - aur_packages
+    - { role: theming, tags: [theming] }
     - { role: sudoers, vars: { sudoers_state: absent } }
     - node
     - pyenv
@@ -28,6 +44,9 @@
     - rust
     - oh_my_bash
     - fonts
+    - flatpak
+    - { role: ssh,    tags: [server], when: install_profile == 'server' }
+    - { role: podman, tags: [server], when: install_profile == 'server' }
     - dotfiles
     - { role: github_cli, tags: [github_cli, interactive] }
     - { role: claude,     tags: [claude] }

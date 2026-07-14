@@ -1,0 +1,62 @@
+---
+- name: Install icon/cursor theming AUR packages
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item }}"
+    executable: /bin/bash
+  loop: "{{ theming_aur_packages }}"
+  register: paru_theming_result
+  changed_when: "'nothing to do' not in paru_theming_result.stdout | lower"
+
+- name: Detect if a graphical session is available
+  ansible.builtin.set_fact:
+    theming_has_session: "{{ (lookup('env', 'DBUS_SESSION_BUS_ADDRESS') | length) > 0 }}"
+
+- name: Warn when no graphical session is detected
+  ansible.builtin.debug:
+    msg: >-
+      Nenhuma sessão gráfica detectada (DBUS_SESSION_BUS_ADDRESS vazio) — pulando
+      aplicação automática de ícone/cursor/tema. Rode com --tags theming de dentro
+      de uma sessão GNOME/XFCE ativa para aplicar.
+  when: not theming_has_session
+
+- name: Apply theme via gsettings (GNOME)
+  ansible.builtin.shell:
+    cmd: "gsettings set org.gnome.desktop.interface {{ item.key }} '{{ item.value }}'"
+    executable: /bin/bash
+  loop:
+    - { key: "icon-theme", value: "{{ theming_icon_theme }}" }
+    - { key: "cursor-theme", value: "{{ theming_cursor_theme }}" }
+    - { key: "gtk-theme", value: "{{ theming_gtk_theme }}" }
+  loop_control:
+    label: "{{ item.key }}"
+  when:
+    - theming_has_session
+    - "'GNOME' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
+  ignore_errors: true
+  changed_when: true
+
+- name: Apply theme via xfconf-query (XFCE)
+  ansible.builtin.shell:
+    cmd: "xfconf-query -c {{ item.channel }} -p {{ item.prop }} -s '{{ item.value }}'"
+    executable: /bin/bash
+  loop:
+    - { channel: "xsettings", prop: "/Net/IconThemeName", value: "{{ theming_icon_theme }}" }
+    - { channel: "xsettings", prop: "/Net/ThemeName", value: "{{ theming_gtk_theme }}" }
+    - { channel: "xsettings", prop: "/Gtk/CursorThemeName", value: "{{ theming_cursor_theme }}" }
+  loop_control:
+    label: "{{ item.prop }}"
+  when:
+    - theming_has_session
+    - "'XFCE' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
+  ignore_errors: true
+  changed_when: true
+
+- name: Note about xfwm4 window border theme (XFCE only)
+  ansible.builtin.debug:
+    msg: >-
+      XFCE aplicado via xfconf-query. O tema das bordas de janela (xfwm4) usa um
+      catálogo próprio, diferente dos temas GTK — confira/ajuste em
+      Configurações > Gerenciador de Janelas se as bordas não combinarem com o tema GTK.
+  when:
+    - theming_has_session
+    - "'XFCE' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
