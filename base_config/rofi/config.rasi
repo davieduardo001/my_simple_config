@@ -1,0 +1,8 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "McMojave-circle";
+    display-drun: "Apps";
+}
+
+@theme "spotlight-dark"

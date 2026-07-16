@@ -58,3 +58,13 @@ flatpak_apps:
 flatpak_apps_server:
   - org.libretro.RetroArch
   - tv.kodi.Kodi
+
+# --- Rofi (Spotlight-style launcher, DE-agnostic shortcut) ---
+rofi_aur_packages:
+  - rofi-themes-collection-git
+rofi_shortcut: "<Super>space"
+# rofi crashes on native Wayland ("requires layer shell protocol") on non-wlroots
+# compositors (Mutter/GNOME, KWin/KDE); forcing XWayland (unset WAYLAND_DISPLAY)
+# fixes the crash but Mutter won't hand keyboard focus to an override-redirect
+# window, so -normal-window is required too.
+rofi_command: "env -u WAYLAND_DISPLAY rofi -show drun -normal-window"

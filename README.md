@@ -18,6 +18,7 @@ One playbook installs everything and wires up all dotfiles via symlinks.
 | Icon/cursor theme | McMojave-circle + macOS cursor (AUR, applied via gsettings/xfconf-query) |
 | Runtimes | Node (NVM), Python (pyenv), Bun, Rust (rustup) |
 | AUR helper | paru |
+| Launcher | Rofi, Spotlight-style theme (AUR), `Super+Space` |
 | Containers *(server profile)* | Podman + podman-compose |
 | Media *(server profile)* | Kodi + RetroArch (Flatpak) |
 | Remote access *(server profile)* | OpenSSH (sshd enabled) |
@@ -88,6 +89,8 @@ ansible-playbook site.yml --ask-become-pass --skip-tags interactive
 
 > **Note:** icon/cursor/GTK theming is applied automatically on both GNOME and XFCE — the `theming` role detects the desktop via `XDG_CURRENT_DESKTOP` and uses `gsettings` or `xfconf-query` accordingly.
 
+> **Note:** Rofi's `Super+Space` shortcut is applied the same way (GNOME/XFCE detection). On GNOME this combo is the *default* binding for `switch-input-source` (keyboard layout switcher) — the `rofi` role/function clears that binding automatically **only if** it's still set to `Super+Space`, and only then. On XFCE there's no known default on that combo, but it's worth checking after applying.
+
 > **Note:** the `vars_prompt` profile question always shows up, even when passing `-e install_profile_choice=...` — Ansible has no built-in way to skip a prompt when an extra-var is already set. The typed answer is simply overridden by the extra-var afterwards, so non-interactive automation still works, it's just not silent.
 
 ## Structure
@@ -111,19 +114,22 @@ ansible/
     ├── bun/              # Bun runtime
     ├── rust/             # Rust via rustup
     ├── oh_my_bash/       # Oh-My-Bash framework
+    ├── makepkg/          # Disables makepkg debug-package generation (faster AUR builds)
     ├── fonts/            # CaskaydiaCove + JetBrainsMono Nerd Fonts
     ├── theming/          # Icons/cursor (AUR) + applies via gsettings (GNOME) or xfconf-query (XFCE)
+    ├── rofi/             # Rofi + Spotlight theme (AUR) + Super+Space shortcut (GNOME/XFCE)
     ├── flatpak/          # Flatpak + Flathub remote + Zen Browser (Kodi/RetroArch on server profile)
     ├── ssh/              # OpenSSH, sshd enabled (server profile only)
     ├── podman/           # Podman + podman-compose (server profile only)
-    ├── dotfiles/         # Symlinks: .bashrc, fastfetch, ghostty
+    ├── dotfiles/         # Symlinks: .bashrc, fastfetch, ghostty, rofi
     ├── github_cli/       # gh auth status check
     └── claude/           # Claude Code CLI + RTK
 
 base_config/              # Source of truth for dotfiles
 ├── bash/bashrc
 ├── fastfetch/config.jsonc
-└── ghostty/config
+├── ghostty/config
+└── rofi/config.rasi
 ```
 
 ## Customization

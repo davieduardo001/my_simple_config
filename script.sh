@@ -326,7 +326,74 @@ install_podman() {
     ok "Podman instalado!!"
 }
 
-# --- 18. Aplicar configurações (symlinks) ---
+# --- 18. Rofi (launcher estilo Spotlight, tema via AUR + atalho DE-agnóstico) ---
+ROFI_AUR_PACKAGES=(
+    rofi-themes-collection-git
+)
+ROFI_SHORTCUT="<Super>space"
+# rofi trava em sessão Wayland nativa ("requires support for the layer shell
+# protocol") em compositores que não são wlroots (Mutter/GNOME, KWin/KDE) —
+# forçar via XWayland tirando WAYLAND_DISPLAY do ambiente resolve o crash, mas
+# como janela override-redirect o Mutter não entrega foco de teclado (dá pra
+# clicar mas não dá pra digitar/navegar) — -normal-window corrige isso.
+ROFI_COMMAND="env -u WAYLAND_DISPLAY rofi -show drun -normal-window"
+
+install_rofi() {
+    log "INSTALANDO ROFI + TEMA SPOTLIGHT (AUR)"
+    paru_install_missing "${ROFI_AUR_PACKAGES[@]}"
+    ok "Rofi + coleção de temas instalados!!"
+}
+
+apply_rofi_shortcut() {
+    log "APLICANDO ATALHO DO ROFI ($ROFI_SHORTCUT)"
+    if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+        warn "Nenhuma sessão gráfica detectada — pulando aplicação automática do atalho."
+        return
+    fi
+
+    case "$XDG_CURRENT_DESKTOP" in
+        *GNOME*)
+            local schema="org.gnome.settings-daemon.plugins.media-keys"
+            local kb_path="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/rofi/"
+
+            local conflict
+            conflict=$(gsettings get org.gnome.desktop.wm.keybindings switch-input-source)
+            if [[ "$conflict" == *"$ROFI_SHORTCUT"* ]]; then
+                gsettings set org.gnome.desktop.wm.keybindings switch-input-source "[]"
+                warn "switch-input-source usava $ROFI_SHORTCUT — desarmado pra liberar o atalho pro Rofi"
+            fi
+
+            local current
+            current=$(gsettings get "$schema" custom-keybindings)
+            if [[ "$current" != *"$kb_path"* ]]; then
+                if [[ "$current" == "@as []" || "$current" == "[]" ]]; then
+                    gsettings set "$schema" custom-keybindings "['$kb_path']"
+                else
+                    gsettings set "$schema" custom-keybindings "${current%]}, '$kb_path']"
+                fi
+            fi
+
+            gsettings set "$schema.custom-keybinding:$kb_path" name 'Rofi Launcher'
+            gsettings set "$schema.custom-keybinding:$kb_path" command "$ROFI_COMMAND"
+            gsettings set "$schema.custom-keybinding:$kb_path" binding "$ROFI_SHORTCUT"
+            ok "Atalho aplicado via gsettings (GNOME)"
+            ;;
+        *XFCE*)
+            local prop="/commands/custom/$ROFI_SHORTCUT"
+            if xfconf-query -c xfce4-keyboard-shortcuts -p "$prop" >/dev/null 2>&1; then
+                xfconf-query -c xfce4-keyboard-shortcuts -p "$prop" -s "$ROFI_COMMAND"
+            else
+                xfconf-query -c xfce4-keyboard-shortcuts -p "$prop" -n -t string -s "$ROFI_COMMAND"
+            fi
+            ok "Atalho aplicado via xfconf-query (XFCE)"
+            ;;
+        *)
+            warn "Interface gráfica '$XDG_CURRENT_DESKTOP' não reconhecida — pulei a aplicação automática do atalho."
+            ;;
+    esac
+}
+
+# --- 19. Aplicar configurações (symlinks) ---
 apply_config() {
     local src="$1"
     local desc="$2"
@@ -421,7 +488,9 @@ setup_system() {
     install_theming_packages   # paru: ícones/cursor (McMojave, WhiteSur, Fluent, apple_cursor...)
     apply_theme                # gsettings (GNOME) ou xfconf-query (XFCE), conforme detectado
     install_flatpak            # flatpak + flathub + Zen Browser (sempre)
+    install_rofi                # paru: rofi + coleção de temas (spotlight-dark)
     apply_config "$BASE_CONFIG" "CONFIGURAÇÕES"
+    apply_rofi_shortcut        # gsettings (GNOME) ou xfconf-query (XFCE), conforme detectado
 
     if [[ "$profile" == "server" ]]; then
         install_ssh                    # sshd habilitado
@@ -442,12 +511,13 @@ case "$1" in
     theme)    install_theming_packages && apply_theme ;;
     makepkg)  configure_makepkg ;;
     flatpak)  install_flatpak ;;
+    rofi)     install_rofi && apply_config "$BASE_CONFIG" "CONFIGURAÇÕES" && apply_rofi_shortcut ;;
     ssh)      install_ssh ;;
     podman)   install_podman ;;
     config)   apply_config "$BASE_CONFIG" "CONFIGURAÇÕES" ;;
     mirrors)  setup_mirrors ;;
     *)
-        echo "Uso: $0 {setup [normal|server]|gh|claude|fonts|theme|makepkg|flatpak|ssh|podman|config|mirrors}"
+        echo "Uso: $0 {setup [normal|server]|gh|claude|fonts|theme|makepkg|flatpak|rofi|ssh|podman|config|mirrors}"
         echo ""
         echo "  setup [normal|server] - Instalação completa (pede pra escolher o perfil se omitido)"
         echo "  gh       - Configura GitHub CLI"
@@ -456,6 +526,7 @@ case "$1" in
         echo "  theme    - Instala ícones/cursor (AUR) e aplica (GNOME/XFCE)"
         echo "  makepkg  - Desativa pacote de debug do makepkg (builds AUR mais rápidos)"
         echo "  flatpak  - Instala Flatpak + Zen Browser"
+        echo "  rofi     - Instala Rofi + tema Spotlight (AUR) e aplica atalho Super+Espaço"
         echo "  ssh      - Instala e habilita SSH (perfil server)"
         echo "  podman   - Instala Podman (perfil server)"
         echo "  config   - Aplica symlinks das configs"

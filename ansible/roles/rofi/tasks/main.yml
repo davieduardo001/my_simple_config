@@ -1,0 +1,78 @@
+---
+- name: Check which Rofi AUR packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ rofi_aur_packages }}"
+  register: rofi_aur_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing Rofi AUR packages via paru (pulls rofi in as a dependency)
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item.item }}"
+    executable: /bin/bash
+  loop: "{{ rofi_aur_check.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.rc != 0
+  register: paru_rofi_result
+  changed_when: true
+
+- name: Detect if a graphical session is available
+  ansible.builtin.set_fact:
+    rofi_has_session: "{{ (lookup('env', 'DBUS_SESSION_BUS_ADDRESS') | length) > 0 }}"
+
+- name: Warn when no graphical session is detected
+  ansible.builtin.debug:
+    msg: >-
+      Nenhuma sessão gráfica detectada (DBUS_SESSION_BUS_ADDRESS vazio) — pulando
+      aplicação automática do atalho do Rofi. Rode com --tags rofi de dentro de uma
+      sessão GNOME/XFCE ativa para aplicar.
+  when: not rofi_has_session
+
+- name: "GNOME: apply Rofi shortcut (resolves switch-input-source conflict, preserves existing custom keybindings)"
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      SCHEMA="org.gnome.settings-daemon.plugins.media-keys"
+      KB_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/rofi/"
+
+      conflict=$(gsettings get org.gnome.desktop.wm.keybindings switch-input-source)
+      if [[ "$conflict" == *"{{ rofi_shortcut }}"* ]]; then
+        gsettings set org.gnome.desktop.wm.keybindings switch-input-source "[]"
+      fi
+
+      current=$(gsettings get "$SCHEMA" custom-keybindings)
+      if [[ "$current" != *"$KB_PATH"* ]]; then
+        if [[ "$current" == "@as []" || "$current" == "[]" ]]; then
+          gsettings set "$SCHEMA" custom-keybindings "['$KB_PATH']"
+        else
+          gsettings set "$SCHEMA" custom-keybindings "${current%]}, '$KB_PATH']"
+        fi
+      fi
+
+      gsettings set "$SCHEMA.custom-keybinding:$KB_PATH" name 'Rofi Launcher'
+      gsettings set "$SCHEMA.custom-keybinding:$KB_PATH" command '{{ rofi_command }}'
+      gsettings set "$SCHEMA.custom-keybinding:$KB_PATH" binding '{{ rofi_shortcut }}'
+    executable: /bin/bash
+  when:
+    - rofi_has_session
+    - "'GNOME' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
+  ignore_errors: true
+  changed_when: true
+
+- name: "XFCE: apply Rofi shortcut"
+  ansible.builtin.shell:
+    cmd: |
+      PROP="/commands/custom/{{ rofi_shortcut }}"
+      if xfconf-query -c xfce4-keyboard-shortcuts -p "$PROP" >/dev/null 2>&1; then
+        xfconf-query -c xfce4-keyboard-shortcuts -p "$PROP" -s "{{ rofi_command }}"
+      else
+        xfconf-query -c xfce4-keyboard-shortcuts -p "$PROP" -n -t string -s "{{ rofi_command }}"
+      fi
+    executable: /bin/bash
+  when:
+    - rofi_has_session
+    - "'XFCE' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
+  ignore_errors: true
+  changed_when: true

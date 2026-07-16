@@ -37,6 +37,7 @@
     - sudoers
     - aur_packages
     - { role: theming, tags: [theming] }
+    - { role: rofi,    tags: [rofi] }
     - { role: sudoers, vars: { sudoers_state: absent } }
     - node
     - pyenv
