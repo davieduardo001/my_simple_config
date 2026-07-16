@@ -1,8 +1,19 @@
 ---
-- name: Install AUR packages via paru
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ item }}"
-    executable: /bin/bash
+- name: Check which AUR packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
   loop: "{{ aur_packages }}"
+  register: aur_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing AUR packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item.item }}"
+    executable: /bin/bash
+  loop: "{{ aur_check.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.rc != 0
   register: paru_result
-  changed_when: "'nothing to do' not in paru_result.stdout | lower"
+  changed_when: true

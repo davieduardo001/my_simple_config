@@ -1,11 +1,22 @@
 ---
-- name: Install icon/cursor theming AUR packages
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ item }}"
-    executable: /bin/bash
+- name: Check which theming AUR packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
   loop: "{{ theming_aur_packages }}"
+  register: theming_aur_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing theming AUR packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item.item }}"
+    executable: /bin/bash
+  loop: "{{ theming_aur_check.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.rc != 0
   register: paru_theming_result
-  changed_when: "'nothing to do' not in paru_theming_result.stdout | lower"
+  changed_when: true
 
 - name: Detect if a graphical session is available
   ansible.builtin.set_fact:

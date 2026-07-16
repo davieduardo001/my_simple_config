@@ -75,12 +75,25 @@ install_system_packages() {
 }
 
 # --- 4. Pacotes AUR via paru ---
+# Instala só o que ainda não está no sistema — não força atualização de
+# pacotes AUR já instalados (paru -S --needed só evita reinstalar a MESMA
+# versão, mas ainda tenta atualizar se houver versão nova disponível).
+paru_install_missing() {
+    local to_install=()
+    local pkg
+    for pkg in "$@"; do
+        pacman -Q "$pkg" &>/dev/null || to_install+=("$pkg")
+    done
+    if [ ${#to_install[@]} -eq 0 ]; then
+        ok "Já instalados, nada a fazer."
+        return
+    fi
+    paru -S --needed --noconfirm "${to_install[@]}"
+}
+
 install_aur_packages() {
     log "INSTALANDO PACOTES AUR (paru)"
-    paru -S --needed --noconfirm \
-        brave-bin \
-        visual-studio-code-bin \
-        ghostty
+    paru_install_missing brave-bin visual-studio-code-bin ghostty
     ok "Pacotes AUR instalados!!"
 }
 
@@ -244,7 +257,7 @@ THEME_GTK="Adwaita"
 
 install_theming_packages() {
     log "INSTALANDO TEMAS DE ÍCONE/CURSOR (AUR)"
-    paru -S --needed --noconfirm "${THEMING_AUR_PACKAGES[@]}"
+    paru_install_missing "${THEMING_AUR_PACKAGES[@]}"
     ok "Pacotes de tema instalados!!"
 }
 
