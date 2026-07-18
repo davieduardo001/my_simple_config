@@ -65,6 +65,7 @@ Depois é só **reboot** → o boot cai no tuigreet → login → Hyprland.
 | `Super+Escape` | Bloquear tela (hyprlock) |
 | `Super+Q` | Fechar janela |
 | `Super+1..9` | Workspaces |
+| `Super+A` / `Super+D` | Workspace anterior / próximo |
 | `Super+Shift+R` | Recarregar config do Hyprland |
 
 ## Uso
