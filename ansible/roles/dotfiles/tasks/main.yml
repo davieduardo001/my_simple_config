@@ -20,19 +20,31 @@
     state: link
     force: true
 
+- name: Check for pre-existing config dirs
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.config/{{ item }}"
+  loop: "{{ dotfiles_links }}"
+  register: dotfiles_stats
+
+# Diretórios reais (ex.: o config autogerado do primeiro boot do Hyprland)
+# bloqueiam a criação do symlink — move de lado com sufixo de timestamp
+- name: Move aside real directories that would block the symlinks
+  ansible.builtin.shell:
+    cmd: 'mv "{{ item.stat.path }}" "{{ item.stat.path }}.bak.$(date +%s)"'
+    executable: /bin/bash
+  loop: "{{ dotfiles_stats.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.stat.exists and not item.stat.islnk
+  changed_when: true
+
 - name: Link app configs into ~/.config
   ansible.builtin.file:
     src: "{{ repo_root }}/base_config/{{ item }}"
     dest: "{{ ansible_env.HOME }}/.config/{{ item }}"
     state: link
     force: true
-  loop:
-    - fastfetch
-    - ghostty
-    - rofi
-    - hypr
-    - waybar
-    - swaync
+  loop: "{{ dotfiles_links }}"
 
 - name: Link wallpapers into ~/.config
   ansible.builtin.file:
