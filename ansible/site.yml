@@ -18,9 +18,11 @@
     - mirrors
     - pacman
     - makepkg
-    - paru
-    # janela NOPASSWD para o paru — toda instalação de pacote acontece aqui dentro
+    # janela NOPASSWD para o pacman — precisa abrir ANTES do paru, porque o
+    # próprio build do paru (makepkg -si) usa sudo pacman pra instalar deps
+    # (cargo) e o pacote final; toda instalação via paru também acontece aqui
     - sudoers
+    - paru
     - packages
     - aur_packages
     - { role: network,  tags: [network] }
