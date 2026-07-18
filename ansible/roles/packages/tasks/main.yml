@@ -1,7 +1,21 @@
 ---
-- name: Update cache and install pacman packages
+- name: Check which base packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ pacman_packages }}"
+  register: pkg_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing base packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -Sy --needed --noconfirm {{ pkg_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
+    executable: /bin/bash
+  when: pkg_check.results | selectattr('rc', 'ne', 0) | list | length > 0
+  changed_when: true
+
+- name: Remove legacy packages
   become: true
   community.general.pacman:
-    name: "{{ pacman_packages }}"
-    state: present
-    update_cache: true
+    name: "{{ packages_absent }}"
+    state: absent

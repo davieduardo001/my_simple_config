@@ -1,0 +1,78 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "right",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "overlay",
+  "layer-shell": true,
+  "control-center-width": 420,
+  "control-center-margin-top": 12,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-right": 12,
+  "fit-to-screen": true,
+  "notification-window-width": 400,
+  "notification-icon-size": 48,
+  "timeout": 6,
+  "timeout-low": 3,
+  "timeout-critical": 0,
+  "hide-on-clear": true,
+  "hide-on-action": true,
+  "keyboard-shortcuts": true,
+  "widgets": [
+    "title",
+    "dnd",
+    "buttons-grid",
+    "volume",
+    "backlight",
+    "mpris",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Central de controle",
+      "clear-all-button": true,
+      "button-text": "Limpar"
+    },
+    "dnd": {
+      "text": "Não perturbe"
+    },
+    "buttons-grid": {
+      "actions": [
+        {
+          "label": "󰤨",
+          "command": "sh -c 'nmcli radio wifi | grep -q enabled && nmcli radio wifi off || nmcli radio wifi on'"
+        },
+        {
+          "label": "󰂯",
+          "command": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && bluetoothctl power off || bluetoothctl power on'"
+        },
+        {
+          "label": "󰌾",
+          "command": "hyprlock"
+        },
+        {
+          "label": "󰐥",
+          "command": "systemctl poweroff"
+        },
+        {
+          "label": "󰜉",
+          "command": "systemctl reboot"
+        },
+        {
+          "label": "󰗽",
+          "command": "hyprctl dispatch exit"
+        }
+      ]
+    },
+    "volume": {
+      "label": "󰕾"
+    },
+    "backlight": {
+      "label": "󰃟"
+    },
+    "mpris": {
+      "image-size": 64,
+      "image-radius": 8
+    }
+  }
+}

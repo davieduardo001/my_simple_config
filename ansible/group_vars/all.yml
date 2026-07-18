@@ -1,5 +1,8 @@
 ---
-# --- Pacman packages ---
+# Toda instalação de pacote usa paru (repo oficial e AUR), dentro da janela
+# sudoers do site.yml. A única exceção é o bootstrap do próprio paru.
+
+# --- Pacotes base (repo oficial, via paru) ---
 pacman_packages:
   - base-devel
   - git
@@ -23,11 +26,80 @@ pacman_packages:
   - timeshift
   - reflector
 
+# --- Pacotes legados a remover (idempotente) ---
+packages_absent:
+  - visual-studio-code-bin
+  - rofi-themes-collection-git
+  - rofi
+
 # --- AUR packages ---
 aur_packages:
   - brave-bin
-  - visual-studio-code-bin
   - ghostty
+
+# --- Hyprland desktop ---
+hyprland_packages:
+  - hyprland
+  - xdg-desktop-portal-hyprland
+  - xdg-desktop-portal-gtk
+  - hyprlock
+  - hypridle
+  - hyprpolkitagent
+  - waybar
+  - swaync
+  - rofi-wayland
+  - swww
+  - cliphist
+  - grim
+  - slurp
+  - satty
+  - wl-clipboard
+  - brightnessctl
+  - playerctl
+  - pavucontrol
+  - pipewire
+  - pipewire-alsa
+  - pipewire-pulse
+  - wireplumber
+  - qt5-wayland
+  - qt6-wayland
+  - noto-fonts
+  - noto-fonts-emoji
+
+# --- Apps desktop ---
+desktop_apps:
+  - libreoffice-fresh
+  - libreoffice-fresh-pt-br
+  - hunspell-pt-br
+  - hunspell-en_us
+  - gnome-calculator
+  - syncthing
+  - localsend-bin
+  - firefox
+  - chromium
+
+# --- Rede + Bluetooth (toggles do swaync dependem disso) ---
+network_packages:
+  - networkmanager
+  - bluez
+  - bluez-utils
+network_services:
+  - NetworkManager.service
+  - bluetooth.service
+
+# --- Login (greetd + tuigreet) ---
+greetd_packages:
+  - greetd
+  - greetd-tuigreet
+
+# --- Neovim / LazyVim ---
+neovim_packages:
+  - neovim
+  - ripgrep
+  - fd
+  - lazygit
+lazyvim_repo: "https://github.com/davieduardo001/lazyvim-config"
+lazyvim_dest: "{{ ansible_env.HOME }}/.config/nvim"
 
 # --- Nerd Fonts ---
 nerd_fonts_version: "v3.4.0"
@@ -38,7 +110,7 @@ nerd_fonts:
 # --- NVM ---
 nvm_version: "v0.40.1"
 
-# --- Icon/cursor/GTK theming (DE-agnostic assets) ---
+# --- Icon/cursor/GTK theming ---
 theming_aur_packages:
   - mcmojave-circle-icon-theme-git
   - whitesur-icon-theme-git
@@ -50,21 +122,22 @@ theming_icon_theme: "McMojave-circle"
 theming_cursor_theme: "macOS"
 theming_gtk_theme: "Adwaita"
 
-# --- Flatpak apps (both profiles) ---
+# --- Paleta grayscale: única fonte de verdade das cores do rice ---
+# A role theming renderiza estes valores em base_config/hypr/colors.conf,
+# base_config/waybar/colors.css, base_config/swaync/colors.css e
+# base_config/rofi/colors.rasi (todos versionados). Trocar a paleta aqui e
+# re-rodar `--tags theming` re-tematiza o desktop inteiro.
+theme_palette:
+  bg: "0a0a0a"
+  bg_alt: "121212"
+  surface: "1a1a1a"
+  surface2: "242424"
+  border: "3a3a3a"
+  border_hi: "5a5a5a"
+  text_dim: "8a8a8a"
+  text: "d4d4d4"
+  text_hi: "eeeeee"
+
+# --- Flatpak apps ---
 flatpak_apps:
   - app.zen_browser.zen
-
-# --- Flatpak apps: server profile only (TV box media) ---
-flatpak_apps_server:
-  - org.libretro.RetroArch
-  - tv.kodi.Kodi
-
-# --- Rofi (Spotlight-style launcher, DE-agnostic shortcut) ---
-rofi_aur_packages:
-  - rofi-themes-collection-git
-rofi_shortcut: "<Super>space"
-# rofi crashes on native Wayland ("requires layer shell protocol") on non-wlroots
-# compositors (Mutter/GNOME, KWin/KDE); forcing XWayland (unset WAYLAND_DISPLAY)
-# fixes the crash but Mutter won't hand keyboard focus to an override-redirect
-# window, so -normal-window is required too.
-rofi_command: "env -u WAYLAND_DISPLAY rofi -show drun -normal-window"

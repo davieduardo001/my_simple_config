@@ -9,14 +9,26 @@
 
 - name: Install missing theming AUR packages via paru
   ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ item.item }}"
+    cmd: "paru -S --needed --noconfirm {{ theming_aur_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
     executable: /bin/bash
-  loop: "{{ theming_aur_check.results }}"
-  loop_control:
-    label: "{{ item.item }}"
-  when: item.rc != 0
-  register: paru_theming_result
+  when: theming_aur_check.results | selectattr('rc', 'ne', 0) | list | length > 0
   changed_when: true
+
+# A paleta grayscale (theme_palette em group_vars/all.yml) é renderizada para
+# dentro de base_config/ — os arquivos gerados são versionados, então mudança
+# de paleta aparece como diff no git.
+- name: Render grayscale palette files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ repo_root }}/base_config/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: colors.conf.j2, dest: hypr/colors.conf }
+    - { src: colors.css.j2, dest: waybar/colors.css }
+    - { src: colors.css.j2, dest: swaync/colors.css }
+    - { src: colors.rasi.j2, dest: rofi/colors.rasi }
+  loop_control:
+    label: "{{ item.dest }}"
 
 - name: Detect if a graphical session is available
   ansible.builtin.set_fact:
@@ -26,11 +38,11 @@
   ansible.builtin.debug:
     msg: >-
       Nenhuma sessão gráfica detectada (DBUS_SESSION_BUS_ADDRESS vazio) — pulando
-      aplicação automática de ícone/cursor/tema. Rode com --tags theming de dentro
-      de uma sessão GNOME/XFCE ativa para aplicar.
+      aplicação de ícone/cursor/tema GTK. Rode com --tags theming de dentro da
+      sessão Hyprland para aplicar.
   when: not theming_has_session
 
-- name: Apply theme via gsettings (GNOME)
+- name: Apply GTK theme via gsettings
   ansible.builtin.shell:
     cmd: "gsettings set org.gnome.desktop.interface {{ item.key }} '{{ item.value }}'"
     executable: /bin/bash
@@ -38,36 +50,9 @@
     - { key: "icon-theme", value: "{{ theming_icon_theme }}" }
     - { key: "cursor-theme", value: "{{ theming_cursor_theme }}" }
     - { key: "gtk-theme", value: "{{ theming_gtk_theme }}" }
+    - { key: "color-scheme", value: "prefer-dark" }
   loop_control:
     label: "{{ item.key }}"
-  when:
-    - theming_has_session
-    - "'GNOME' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
+  when: theming_has_session
   ignore_errors: true
   changed_when: true
-
-- name: Apply theme via xfconf-query (XFCE)
-  ansible.builtin.shell:
-    cmd: "xfconf-query -c {{ item.channel }} -p {{ item.prop }} -s '{{ item.value }}'"
-    executable: /bin/bash
-  loop:
-    - { channel: "xsettings", prop: "/Net/IconThemeName", value: "{{ theming_icon_theme }}" }
-    - { channel: "xsettings", prop: "/Net/ThemeName", value: "{{ theming_gtk_theme }}" }
-    - { channel: "xsettings", prop: "/Gtk/CursorThemeName", value: "{{ theming_cursor_theme }}" }
-  loop_control:
-    label: "{{ item.prop }}"
-  when:
-    - theming_has_session
-    - "'XFCE' in ansible_env.XDG_CURRENT_DESKTOP | default('')"
-  ignore_errors: true
-  changed_when: true
-
-- name: Note about xfwm4 window border theme (XFCE only)
-  ansible.builtin.debug:
-    msg: >-
-      XFCE aplicado via xfconf-query. O tema das bordas de janela (xfwm4) usa um
-      catálogo próprio, diferente dos temas GTK — confira/ajuste em
-      Configurações > Gerenciador de Janelas se as bordas não combinarem com o tema GTK.
-  when:
-    - theming_has_session
-    - "'XFCE' in ansible_env.XDG_CURRENT_DESKTOP | default('')"

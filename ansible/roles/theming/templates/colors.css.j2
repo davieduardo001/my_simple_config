@@ -1,0 +1,4 @@
+/* Gerado pela role theming — edite theme_palette em ansible/group_vars/all.yml */
+{% for name, hex in theme_palette.items() %}
+@define-color {{ name }} #{{ hex }};
+{% endfor %}

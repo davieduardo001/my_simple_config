@@ -1,138 +1,144 @@
-# dotfiles — Arch Linux Dev Environment
+# dotfiles — Arch Linux + Hyprland
 
-Automated setup for an Arch Linux development environment using **Ansible**.  
-One playbook installs everything and wires up all dotfiles via symlinks.
+Setup automatizado de um desktop Arch Linux com **Hyprland riced grayscale**, usando **Ansible**.
+Um playbook instala tudo e conecta os dotfiles via symlinks.
 
 ## Stack
 
-| Category | Tool |
+| Categoria | Ferramenta |
 |---|---|
-| Shell | Bash + Oh-My-Bash |
-| Prompt | Starship |
-| Terminal | Ghostty |
-| Browser | Brave (AUR) + Zen Browser (Flatpak) |
-| Editor | VS Code |
-| System info | fastfetch |
-| CLI tools | eza, bat, zoxide, fzf, btop |
-| Fonts | CaskaydiaCove & JetBrainsMono Nerd Fonts |
-| Icon/cursor theme | McMojave-circle + macOS cursor (AUR, applied via gsettings/xfconf-query) |
+| Compositor | Hyprland (blur, cantos arredondados, animações custom) |
+| Login | greetd + tuigreet |
+| Barra | Waybar |
+| Control center | swaync — painel lateral estilo celular (`Super+N`) |
+| Launcher | Rofi (wayland nativo), tema Spotlight grayscale, `Super+Space` |
+| Wallpaper | swww (transição animada, aleatório de `wallpapers/`) |
+| Lock/idle | hyprlock + hypridle |
+| Screenshot | grim + slurp + satty (`Super+Shift+S`, estilo Windows) |
+| Clipboard | cliphist (`Super+V`) |
+| Shell | Bash + Oh-My-Bash + Starship |
+| Terminal | Ghostty (Min Dark, JetBrainsMono) |
+| Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) |
+| Browser | Brave (AUR) + Zen Browser (Flatpak) + Firefox + Chromium |
+| Office | LibreOffice Fresh (pt-BR) |
+| Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
+| CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |
+| Fontes | CaskaydiaCove & JetBrainsMono Nerd Fonts |
+| Ícones/cursor | McMojave-circle + macOS cursor |
 | Runtimes | Node (NVM), Python (pyenv), Bun, Rust (rustup) |
-| AUR helper | paru |
-| Launcher | Rofi, Spotlight-style theme (AUR), `Super+Space` |
-| Containers *(server profile)* | Podman + podman-compose |
-| Media *(server profile)* | Kodi + RetroArch (Flatpak) |
-| Remote access *(server profile)* | OpenSSH (sshd enabled) |
+| Rede | NetworkManager + BlueZ (instalados e habilitados pelo playbook) |
+| AUR helper | paru — **toda** instalação de pacote passa por ele |
 
-## Requirements
+## Requisitos
 
-- A fresh Arch Linux install (the pre-task validates this) with a `sudo`-capable user
-- Everything else (paru, packages, runtimes, fonts, theming...) is installed by the playbook itself — you only need `git` + `ansible` + `python-jmespath` to get it started
+- Arch Linux limpo (o pre-task valida) com usuário `sudo`
+- Só `git` + `ansible` + `python-jmespath` pra dar o boot — o resto (paru, pacotes, runtimes, fontes, tema) o playbook instala
 
-## Install
-
-Copy-paste on a fresh Arch install:
+## Instalação
 
 ```bash
-# 1. Bootstrap: only what's needed to run the playbook
+# 1. Bootstrap
 sudo pacman -Sy --needed git ansible python-jmespath
 
-# 2. Clone this repo
-git clone <this-repo> ~/dotfiles
+# 2. Clonar
+git clone <este-repo> ~/dotfiles
 cd ~/dotfiles/ansible
 
-# 3. Run the full setup (asks for your sudo password once)
+# 3. Rodar tudo (pede a senha de sudo uma vez)
 ansible-playbook site.yml --ask-become-pass
 ```
 
-## Install profiles
+Depois é só **reboot** → o boot cai no tuigreet → login → Hyprland.
 
-Every install (both the playbook and `script.sh`) asks which profile to set up:
+> O greetd é apenas *habilitado* pelo playbook — a troca de display manager acontece no próximo boot, de propósito, pra não derrubar a sessão de onde você está rodando.
 
-- **normal** — full dev desktop: dotfiles, dev tooling, GUI apps, icon/cursor/GTK theming, Flatpak + Zen Browser.
-- **server** — everything in `normal`, **plus** OpenSSH (sshd enabled), Podman + podman-compose, and Kodi + RetroArch via Flatpak. Meant for a living-room TV box / HTPC you reach over SSH — `server` is a superset of `normal`, not a stripped-down version.
+## Atalhos principais
 
-```bash
-# Ansible: prompts interactively (1=normal, 2=server)
-ansible-playbook site.yml --ask-become-pass
+| Atalho | Ação |
+|---|---|
+| `Super+Space` | Launcher (Rofi) |
+| `Super+N` | Control center lateral (swaync) |
+| `Super+Enter` | Terminal (Ghostty) |
+| `Super+Shift+S` | Screenshot com anotação (satty) |
+| `Print` / `Shift+Print` | Região → clipboard / tela → arquivo |
+| `Super+V` | Histórico do clipboard |
+| `Super+Escape` | Bloquear tela (hyprlock) |
+| `Super+Q` | Fechar janela |
+| `Super+1..9` | Workspaces |
+| `Super+Shift+R` | Recarregar config do Hyprland |
 
-# Ansible: skip the prompt, force a profile non-interactively
-ansible-playbook site.yml --ask-become-pass -e install_profile_choice=2
+## Uso
 
-# script.sh: prompts interactively if the profile is omitted
-./script.sh setup
-
-# script.sh: skip the prompt
-./script.sh setup server
-```
-
-Add more Flatpak apps by editing `flatpak_apps` (both profiles) or `flatpak_apps_server` (server only) in `ansible/group_vars/all.yml` (and the matching `FLATPAK_APPS` / `FLATPAK_APPS_SERVER` arrays in `script.sh`).
-
-## Usage
-
-Re-run the playbook any time — every role is idempotent (`--needed` on pacman/paru, symlinks, etc.):
+Re-rode o playbook quando quiser — todas as roles são idempotentes:
 
 ```bash
-# Only dotfiles (symlinks)
+# Só dotfiles (symlinks)
 ansible-playbook site.yml --ask-become-pass --tags dotfiles
 
-# Only icon/cursor/GTK theming
+# Só paleta/tema (re-renderiza as cores + gsettings)
 ansible-playbook site.yml --ask-become-pass --tags theming
 
-# Only the server-profile extras (SSH, Podman) — still needs -e install_profile_choice=2
-ansible-playbook site.yml --ask-become-pass --tags server -e install_profile_choice=2
-
-# Skip interactive steps (gh auth, claude)
+# Pular passos interativos (gh auth)
 ansible-playbook site.yml --ask-become-pass --skip-tags interactive
 ```
 
-> **Note:** `gh auth login` is interactive and cannot be automated — the playbook will print a reminder if you're not authenticated yet.
+### Trocar a paleta
 
-> **Note:** icon/cursor/GTK theming is applied automatically on both GNOME and XFCE — the `theming` role detects the desktop via `XDG_CURRENT_DESKTOP` and uses `gsettings` or `xfconf-query` accordingly.
+As cores do rice inteiro (Hyprland, Waybar, swaync, Rofi) vêm de um único
+dicionário: `theme_palette` em `ansible/group_vars/all.yml`. Edite lá e rode
+`--tags theming` — os arquivos de cor são re-renderizados dentro de
+`base_config/` (e versionados, então a mudança aparece no `git diff`).
 
-> **Note:** Rofi's `Super+Space` shortcut is applied the same way (GNOME/XFCE detection). On GNOME this combo is the *default* binding for `switch-input-source` (keyboard layout switcher) — the `rofi` role/function clears that binding automatically **only if** it's still set to `Super+Space`, and only then. On XFCE there's no known default on that combo, but it's worth checking after applying.
+### Trocar o wallpaper
 
-> **Note:** the `vars_prompt` profile question always shows up, even when passing `-e install_profile_choice=...` — Ansible has no built-in way to skip a prompt when an extra-var is already set. The typed answer is simply overridden by the extra-var afterwards, so non-interactive automation still works, it's just not silent.
+`~/.config/hypr/scripts/wallpaper.sh` aplica um aleatório de `wallpapers/`
+com transição do swww. Roda no autostart; rode de novo pra sortear outro.
 
-## Structure
+## Estrutura
 
 ```
 ansible/
-├── ansible.cfg           # Ansible configuration
-├── inventory/
-│   └── hosts.yml         # Localhost connection
-├── group_vars/
-│   └── all.yml           # Package lists and versions (single source of truth)
-├── site.yml              # Main playbook
+├── ansible.cfg
+├── inventory/hosts.yml
+├── group_vars/all.yml    # pacotes, versões e paleta (fonte única de verdade)
+├── site.yml              # playbook principal
 └── roles/
-    ├── mirrors/          # Update mirrorlist via reflector
+    ├── mirrors/          # mirrorlist via reflector
     ├── pacman/           # Color, ILoveCandy, ParallelDownloads
-    ├── paru/             # AUR helper (Rust)
-    ├── packages/         # pacman packages
-    ├── aur_packages/     # AUR packages via paru
-    ├── node/             # NVM + Node LTS
-    ├── pyenv/            # Python version manager
-    ├── bun/              # Bun runtime
-    ├── rust/             # Rust via rustup
-    ├── oh_my_bash/       # Oh-My-Bash framework
-    ├── makepkg/          # Disables makepkg debug-package generation (faster AUR builds)
-    ├── fonts/            # CaskaydiaCove + JetBrainsMono Nerd Fonts
-    ├── theming/          # Icons/cursor (AUR) + applies via gsettings (GNOME) or xfconf-query (XFCE)
-    ├── rofi/             # Rofi + Spotlight theme (AUR) + Super+Space shortcut (GNOME/XFCE)
-    ├── flatpak/          # Flatpak + Flathub remote + Zen Browser (Kodi/RetroArch on server profile)
-    ├── ssh/              # OpenSSH, sshd enabled (server profile only)
-    ├── podman/           # Podman + podman-compose (server profile only)
-    ├── dotfiles/         # Symlinks: .bashrc, fastfetch, ghostty, rofi
-    ├── github_cli/       # gh auth status check
+    ├── makepkg/          # sem debug packages (builds AUR mais rápidos)
+    ├── paru/             # AUR helper — todo pacote é instalado por ele
+    ├── sudoers/          # janela NOPASSWD temporária p/ o paru (aberta/fechada no site.yml)
+    ├── packages/         # pacotes base + remoção de legados (vscode, rofi X11)
+    ├── aur_packages/     # brave, ghostty
+    ├── network/          # NetworkManager + BlueZ habilitados
+    ├── hyprland/         # compositor + waybar + swaync + rofi-wayland + tools
+    ├── greetd/           # tuigreet → Hyprland, desabilita DM antigo
+    ├── theming/          # ícones/cursor + renderiza a paleta grayscale
+    ├── neovim/           # Neovim + clone da config LazyVim
+    ├── apps/             # LibreOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
+    ├── flatpak/          # Flathub + Zen Browser
+    ├── node|pyenv|bun|rust|oh_my_bash|fonts/
+    ├── dotfiles/         # symlinks de tudo em base_config/ (+ wallpapers)
+    ├── github_cli/       # gh auth check
     └── claude/           # Claude Code CLI + RTK
 
-base_config/              # Source of truth for dotfiles
+base_config/              # fonte de verdade dos dotfiles (symlinkado p/ ~/.config)
 ├── bash/bashrc
-├── fastfetch/config.jsonc
+├── fastfetch/
 ├── ghostty/config
-└── rofi/config.rasi
+├── hypr/                 # hyprland.conf, conf.d/, hyprlock, hypridle, scripts/
+├── waybar/
+├── swaync/
+└── rofi/                 # tema spotlight-gray
+
+docs/                     # PRD e SPEC da migração p/ Hyprland
+wallpapers/
 ```
 
-## Customization
+## Customização
 
-Edit `ansible/group_vars/all.yml` to change package lists or tool versions.  
-Edit files in `base_config/` to change shell, terminal, or fastfetch configs.
+- Pacotes/versões/paleta: `ansible/group_vars/all.yml`
+- Atalhos: `base_config/hypr/conf.d/binds.conf`
+- Animações: `base_config/hypr/conf.d/animations.conf`
+- Barra: `base_config/waybar/`
+- Control center: `base_config/swaync/`

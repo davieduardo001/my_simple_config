@@ -1,0 +1,23 @@
+---
+- name: Check which network packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ network_packages }}"
+  register: network_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing network packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ network_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
+    executable: /bin/bash
+  when: network_check.results | selectattr('rc', 'ne', 0) | list | length > 0
+  changed_when: true
+
+- name: Enable and start NetworkManager and Bluetooth
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop: "{{ network_services }}"

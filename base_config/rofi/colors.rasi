@@ -1,0 +1,12 @@
+/* Gerado pela role theming — edite theme_palette em ansible/group_vars/all.yml */
+* {
+    bg: #0a0a0a;
+    bg_alt: #121212;
+    surface: #1a1a1a;
+    surface2: #242424;
+    border: #3a3a3a;
+    border_hi: #5a5a5a;
+    text_dim: #8a8a8a;
+    text: #d4d4d4;
+    text_hi: #eeeeee;
+}

@@ -1,0 +1,89 @@
+/* Spotlight-style, grayscale — rofi-wayland nativo */
+@import "colors.rasi"
+
+* {
+    background-color: transparent;
+    text-color: @text;
+}
+
+window {
+    background-color: @bg_alt;
+    border: 2px;
+    border-color: @border;
+    border-radius: 14px;
+    width: 640px;
+    location: center;
+    anchor: center;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    padding: 12px;
+    spacing: 10px;
+}
+
+inputbar {
+    children: [ prompt, entry ];
+    spacing: 10px;
+    padding: 12px 16px;
+    background-color: @surface;
+    border-radius: 10px;
+}
+
+prompt {
+    enabled: true;
+    text-color: @text_dim;
+}
+
+entry {
+    placeholder: "Buscar…";
+    placeholder-color: @text_dim;
+    text-color: @text_hi;
+    cursor: text;
+}
+
+listview {
+    lines: 7;
+    fixed-height: false;
+    scrollbar: false;
+    dynamic: true;
+    spacing: 2px;
+}
+
+element {
+    padding: 10px 12px;
+    spacing: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+}
+
+element selected.normal {
+    background-color: @surface2;
+    text-color: @text_hi;
+}
+
+element-icon {
+    size: 28px;
+    cursor: inherit;
+}
+
+element-text {
+    vertical-align: 0.5;
+    cursor: inherit;
+    text-color: inherit;
+}
+
+message {
+    padding: 8px 12px;
+    background-color: @surface;
+    border-radius: 10px;
+}
+
+textbox {
+    text-color: @text_dim;
+}

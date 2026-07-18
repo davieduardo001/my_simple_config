@@ -3,6 +3,7 @@ configuration {
     show-icons: true;
     icon-theme: "McMojave-circle";
     display-drun: "Apps";
+    font: "JetBrainsMono Nerd Font 12";
 }
 
-@theme "spotlight-dark"
+@theme "spotlight-gray"

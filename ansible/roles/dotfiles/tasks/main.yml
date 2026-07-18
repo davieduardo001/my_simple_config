@@ -30,3 +30,13 @@
     - fastfetch
     - ghostty
     - rofi
+    - hypr
+    - waybar
+    - swaync
+
+- name: Link wallpapers into ~/.config
+  ansible.builtin.file:
+    src: "{{ repo_root }}/wallpapers"
+    dest: "{{ ansible_env.HOME }}/.config/wallpapers"
+    state: link
+    force: true

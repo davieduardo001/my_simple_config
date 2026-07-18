@@ -1,0 +1,46 @@
+---
+- name: Check which Neovim packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ neovim_packages }}"
+  register: neovim_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing Neovim packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ neovim_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
+    executable: /bin/bash
+  when: neovim_check.results | selectattr('rc', 'ne', 0) | list | length > 0
+  changed_when: true
+
+- name: Check for existing ~/.config/nvim
+  ansible.builtin.stat:
+    path: "{{ lazyvim_dest }}"
+  register: nvim_dir
+
+- name: Clone LazyVim config
+  ansible.builtin.git:
+    repo: "{{ lazyvim_repo }}"
+    dest: "{{ lazyvim_dest }}"
+    version: HEAD
+  when: not nvim_dir.stat.exists
+
+- name: Check origin of existing nvim config
+  ansible.builtin.command:
+    cmd: "git -C {{ lazyvim_dest }} remote get-url origin"
+  register: nvim_origin
+  failed_when: false
+  changed_when: false
+  when: nvim_dir.stat.exists
+
+- name: Warn when existing nvim config is not the LazyVim repo
+  ansible.builtin.debug:
+    msg: >-
+      ~/.config/nvim já existe e não é um clone de {{ lazyvim_repo }} —
+      mantido intocado. Faça backup e remova o diretório se quiser que o
+      playbook clone a config LazyVim.
+  when:
+    - nvim_dir.stat.exists
+    - (nvim_origin.rc | default(1)) != 0
+      or 'davieduardo001/lazyvim-config' not in (nvim_origin.stdout | default(''))

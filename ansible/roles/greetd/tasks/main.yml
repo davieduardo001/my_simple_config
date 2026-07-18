@@ -1,0 +1,52 @@
+---
+- name: Check which greetd packages are already installed
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ greetd_packages }}"
+  register: greetd_check
+  failed_when: false
+  changed_when: false
+
+- name: Install missing greetd packages via paru
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ greetd_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
+    executable: /bin/bash
+  when: greetd_check.results | selectattr('rc', 'ne', 0) | list | length > 0
+  changed_when: true
+
+- name: Configure greetd (tuigreet → Hyprland)
+  become: true
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: /etc/greetd/config.toml
+    mode: "0644"
+
+- name: Detect previously enabled display managers
+  ansible.builtin.command:
+    cmd: "systemctl is-enabled {{ item }}"
+  loop:
+    - gdm.service
+    - sddm.service
+    - lightdm.service
+    - lxdm.service
+  register: dm_check
+  failed_when: false
+  changed_when: false
+
+- name: Disable previous display manager (takes effect on next boot)
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item.item }}"
+    enabled: false
+  loop: "{{ dm_check.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.stdout == 'enabled'
+
+# enabled mas NÃO started: a troca de display manager só acontece no próximo
+# boot, pra não derrubar a sessão gráfica de onde o playbook está rodando
+- name: Enable greetd
+  become: true
+  ansible.builtin.systemd:
+    name: greetd.service
+    enabled: true
