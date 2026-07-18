@@ -31,10 +31,10 @@ packages_absent:
   - visual-studio-code-bin
   - rofi-themes-collection-git
   - rofi
+  - brave-bin
 
 # --- AUR packages ---
 aur_packages:
-  - brave-bin
   - ghostty
 
 # --- Hyprland desktop ---
@@ -68,10 +68,7 @@ hyprland_packages:
 
 # --- Apps desktop ---
 desktop_apps:
-  - libreoffice-fresh
-  - libreoffice-fresh-pt-br
-  - hunspell-pt-br
-  - hunspell-en_us
+  - onlyoffice-bin
   - gnome-calculator
   - syncthing
   - localsend-bin

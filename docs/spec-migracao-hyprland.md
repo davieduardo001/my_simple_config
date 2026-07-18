@@ -148,10 +148,7 @@ hyprland_packages:        # instalados via paru, como todo o resto
   - noto-fonts-emoji
 
 desktop_apps:             # role apps (RF-21) — via paru + syncthing@user habilitado
-  - libreoffice-fresh
-  - libreoffice-fresh-pt-br
-  - hunspell-pt-br
-  - hunspell-en_us
+  - onlyoffice-bin
   - gnome-calculator
   - syncthing
   - localsend-bin
@@ -168,7 +165,7 @@ lazyvim_repo: "https://github.com/davieduardo001/lazyvim-config"
 lazyvim_dest: "{{ ansible_env.HOME }}/.config/nvim"
 
 # Pacotes legados a REMOVER (idempotente: absent)
-packages_absent: [visual-studio-code-bin, rofi, rofi-themes-collection-git]
+packages_absent: [visual-studio-code-bin, rofi, rofi-themes-collection-git, brave-bin]
 ```
 
 **Instalação sempre via paru** (pedido do Davi, inclusive ghostty): todas as roles que instalam pacote usam o padrão existente do repo — check `pacman -Q` + `paru -S --needed --noconfirm` como usuário — e por isso ficam **entre** as duas entradas `sudoers` do `site.yml` (janela NOPASSWD para `/usr/bin/pacman`). A role `packages` migra do módulo pacman para esse padrão e entra na janela. Única exceção: o bootstrap do próprio paru.

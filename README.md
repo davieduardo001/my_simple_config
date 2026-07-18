@@ -19,8 +19,8 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Shell | Bash + Oh-My-Bash + Starship |
 | Terminal | Ghostty (Min Dark, JetBrainsMono) |
 | Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) |
-| Browser | Brave (AUR) + Zen Browser (Flatpak) + Firefox + Chromium |
-| Office | LibreOffice Fresh (pt-BR) |
+| Browser | Firefox + Chromium + Zen Browser (Flatpak) |
+| Office | OnlyOffice (AUR) — visualização/edição leve de docx/xlsx/pptx |
 | Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
 | CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |
 | Fontes | CaskaydiaCove & JetBrainsMono Nerd Fonts |
@@ -110,13 +110,13 @@ ansible/
     ├── paru/             # AUR helper — todo pacote é instalado por ele
     ├── sudoers/          # janela NOPASSWD temporária p/ o paru (aberta/fechada no site.yml)
     ├── packages/         # pacotes base + remoção de legados (vscode, rofi X11)
-    ├── aur_packages/     # brave, ghostty
+    ├── aur_packages/     # ghostty
     ├── network/          # NetworkManager + BlueZ habilitados
     ├── hyprland/         # compositor + waybar + swaync + rofi-wayland + tools
     ├── greetd/           # tuigreet → Hyprland, desabilita DM antigo
     ├── theming/          # ícones/cursor + renderiza a paleta grayscale
     ├── neovim/           # Neovim + clone da config LazyVim
-    ├── apps/             # LibreOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
+    ├── apps/             # OnlyOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
     ├── flatpak/          # Flathub + Zen Browser
     ├── node|pyenv|bun|rust|oh_my_bash|fonts/
     ├── dotfiles/         # symlinks de tudo em base_config/ (+ wallpapers)

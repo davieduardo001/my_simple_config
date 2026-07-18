@@ -61,7 +61,7 @@ Histórias:
 - **RF-11 — Documentação:** README reescrito para o novo stack; `AGENT.md` reescrito ou removido.
 - **RF-19 — Login via greetd + tuigreet:** instala `greetd` e `greetd-tuigreet`, configura o tuigreet para listar/iniciar a sessão Hyprland e habilita o serviço `greetd` (desabilitando display manager anterior, se houver).
 - **RF-20 — Rede e Bluetooth garantidos:** instala `networkmanager`, `bluez` e `bluez-utils` caso faltem, e habilita `NetworkManager.service` e `bluetooth.service` — pré-requisito dos toggles de wifi/bluetooth do swaync numa instalação limpa.
-- **RF-21 — Apps desktop** _(adicionado em 2026-07-18, pós-aprovação)_: LibreOffice Fresh (+ idioma/corretor pt-BR), GNOME Calculator, Syncthing (com `syncthing@user.service` habilitado e iniciado), LocalSend, Firefox e Chromium.
+- **RF-21 — Apps desktop** _(adicionado em 2026-07-18, pós-aprovação; revisado no mesmo dia)_: OnlyOffice (visualização/edição leve de docs), GNOME Calculator, Syncthing (com `syncthing@user.service` habilitado e iniciado), LocalSend, Firefox e Chromium. Brave removido do setup (entra em `packages_absent`).
 
 ### Should have
 
@@ -161,7 +161,7 @@ Sem Figma — a referência visual é textual:
 | 3 | Runtimes: NVM/Node, pyenv, Bun, Rust | Roles inalteradas, instalam normalmente |
 | 4 | Oh-My-Bash + Starship no shell | Prompt e plugins intactos |
 | 5 | Fontes Nerd (CaskaydiaCove, JetBrainsMono) | Instaladas e detectadas pelo fontconfig |
-| 6 | paru + pacotes AUR restantes (brave, ghostty) | Instalação `--needed` idempotente |
+| 6 | paru + pacotes AUR restantes (ghostty, onlyoffice, localsend) | Instalação `--needed` idempotente |
 | 7 | Flatpak + Zen Browser | Remote Flathub e app instalados (sem os apps de server) |
 | 8 | Ícones McMojave-circle + cursor macOS | Aplicados via gsettings/arquivos GTK sob Hyprland |
 | 9 | Tags do playbook (`--tags dotfiles`, `--tags theming` etc.) | Continuam filtrando as roles corretas |
