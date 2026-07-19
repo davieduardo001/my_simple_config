@@ -1,25 +1,29 @@
 ---
-- name: Check if NVM is installed
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-  register: nvm_stat
+- name: Check if fnm is installed
+  ansible.builtin.command:
+    cmd: pacman -Q fnm
+  register: fnm_check
+  failed_when: false
+  changed_when: false
 
-- name: Install NVM
+- name: Install fnm via paru
   ansible.builtin.shell:
-    cmd: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash"
+    cmd: "paru -S --needed --noconfirm fnm"
     executable: /bin/bash
-  when: not nvm_stat.stat.exists
+  when: fnm_check.rc != 0
+  changed_when: true
 
-- name: Check if Node LTS alias exists
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.nvm/alias/default"
-  register: node_stat
-
-- name: Install Node.js LTS via NVM
+- name: Check for a default Node installed via fnm
   ansible.builtin.shell:
-    cmd: |
-      export NVM_DIR="{{ ansible_env.HOME }}/.nvm"
-      source "$NVM_DIR/nvm.sh"
-      nvm install --lts && nvm alias default lts/*
+    cmd: 'eval "$(fnm env)" && fnm ls | grep -q default'
     executable: /bin/bash
-  when: not node_stat.stat.exists
+  register: node_check
+  failed_when: false
+  changed_when: false
+
+- name: Install Node.js LTS via fnm and set as default
+  ansible.builtin.shell:
+    cmd: 'eval "$(fnm env)" && fnm install --lts && fnm default lts-latest'
+    executable: /bin/bash
+  when: node_check.rc != 0
+  changed_when: true

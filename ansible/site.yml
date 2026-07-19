@@ -32,9 +32,9 @@
     - { role: neovim,   tags: [neovim] }
     - { role: apps,     tags: [apps] }
     - fonts
+    - node
     - flatpak
     - { role: sudoers, vars: { sudoers_state: absent } }
-    - node
     - pyenv
     - bun
     - rust

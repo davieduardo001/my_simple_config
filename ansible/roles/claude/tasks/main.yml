@@ -8,8 +8,7 @@
 - name: Install Claude Code CLI via npm
   ansible.builtin.shell:
     cmd: |
-      export NVM_DIR="{{ ansible_env.HOME }}/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+      eval "$(fnm env)"
       npm install -g @anthropic-ai/claude-code
     executable: /bin/bash
   when: claude_check.rc != 0

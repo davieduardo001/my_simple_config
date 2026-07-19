@@ -108,9 +108,6 @@ fonts_packages:
   - ttf-cascadia-code-nerd
   - ttf-jetbrains-mono-nerd
 
-# --- NVM ---
-nvm_version: "v0.40.1"
-
 # --- Icon/cursor/GTK theming ---
 theming_packages:
   - papirus-icon-theme
