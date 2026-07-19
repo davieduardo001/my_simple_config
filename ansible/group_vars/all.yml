@@ -32,6 +32,10 @@ packages_absent:
   - rofi-themes-collection-git
   - rofi
   - brave-bin
+  - mcmojave-circle-icon-theme-git
+  - whitesur-icon-theme-git
+  - fluent-icon-theme-git
+  - quintom-cursor-theme-git
 
 # --- AUR packages ---
 aur_packages:
@@ -107,14 +111,11 @@ fonts_packages:
 nvm_version: "v0.40.1"
 
 # --- Icon/cursor/GTK theming ---
-theming_aur_packages:
-  - mcmojave-circle-icon-theme-git
-  - whitesur-icon-theme-git
-  - fluent-icon-theme-git
-  - quintom-cursor-theme-git
+theming_packages:
+  - papirus-icon-theme
   - apple_cursor
 
-theming_icon_theme: "McMojave-circle"
+theming_icon_theme: "Papirus-Dark"
 theming_cursor_theme: "macOS"
 theming_gtk_theme: "Adwaita"
 

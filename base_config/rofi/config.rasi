@@ -1,7 +1,7 @@
 configuration {
     modi: "drun,run,window";
     show-icons: true;
-    icon-theme: "McMojave-circle";
+    icon-theme: "Papirus-Dark";
     display-drun: "Apps";
     font: "JetBrainsMono Nerd Font 12";
 }

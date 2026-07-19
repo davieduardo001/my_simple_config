@@ -163,7 +163,7 @@ Sem Figma — a referência visual é textual:
 | 5 | Fontes Nerd (CaskaydiaCove, JetBrainsMono) | Instaladas e detectadas pelo fontconfig |
 | 6 | paru + pacotes AUR restantes (ghostty, onlyoffice, localsend) | Instalação `--needed` idempotente |
 | 7 | Flatpak + Zen Browser | Remote Flathub e app instalados (sem os apps de server) |
-| 8 | Ícones McMojave-circle + cursor macOS | Aplicados via gsettings/arquivos GTK sob Hyprland |
+| 8 | Ícones + cursor macOS | Papirus-Dark (trocou o McMojave em 2026-07-18) + apple_cursor, aplicados via gsettings sob Hyprland |
 | 9 | Tags do playbook (`--tags dotfiles`, `--tags theming` etc.) | Continuam filtrando as roles corretas |
 | 10 | Roles `github_cli` e `claude` | Checks/instalação inalterados |
 
