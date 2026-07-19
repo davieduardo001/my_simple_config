@@ -122,6 +122,10 @@ fonts_packages:
 theming_packages:
   - papirus-icon-theme
   - apple_cursor
+  - qt5ct               # tema escuro p/ apps Qt5
+  - qt6ct               # tema escuro p/ apps Qt6 (Dolphin etc.)
+  - adwaita-qt5         # dá aos apps Qt o visual do Adwaita
+  - adwaita-qt6
 
 theming_icon_theme: "Papirus-Dark"
 theming_cursor_theme: "macOS"

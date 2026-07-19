@@ -6,3 +6,9 @@ dotfiles_links:
   - hypr
   - waybar
   - swaync
+
+dotfiles_file_links:
+  - gtk-3.0/settings.ini
+  - gtk-4.0/settings.ini
+  - qt5ct/qt5ct.conf
+  - qt6ct/qt6ct.conf

@@ -46,6 +46,23 @@
     force: true
   loop: "{{ dotfiles_links }}"
 
+# gtk-3.0/ e qt6ct/ costumam ter outros arquivos do próprio app (bookmarks,
+# estado), então linka arquivo por arquivo em vez do diretório inteiro
+- name: Ensure parent dirs for file-level links exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/{{ item | dirname }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ dotfiles_file_links }}"
+
+- name: Link individual config files
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.config/{{ item }}"
+    state: link
+    force: true
+  loop: "{{ dotfiles_file_links }}"
+
 - name: Link wallpapers into ~/.config
   ansible.builtin.file:
     src: "{{ repo_root }}/wallpapers"
