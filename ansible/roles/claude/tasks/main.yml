@@ -12,18 +12,3 @@
       npm install -g @anthropic-ai/claude-code
     executable: /bin/bash
   when: claude_check.rc != 0
-
-- name: Check if RTK (Rust Token Killer) is installed
-  ansible.builtin.command: which rtk
-  register: rtk_check
-  changed_when: false
-  failed_when: false
-
-- name: Install RTK via cargo
-  ansible.builtin.shell:
-    cmd: |
-      source {{ ansible_env.HOME }}/.cargo/env
-      cargo install rtk
-    executable: /bin/bash
-  when: rtk_check.rc != 0
-  ignore_errors: true
