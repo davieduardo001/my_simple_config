@@ -1,18 +1,10 @@
 ---
-- name: Check which Neovim packages are already installed
-  ansible.builtin.command:
-    cmd: "pacman -Q {{ item }}"
-  loop: "{{ neovim_packages }}"
-  register: neovim_check
-  failed_when: false
-  changed_when: false
-
-- name: Install missing Neovim packages via paru
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ neovim_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
-    executable: /bin/bash
-  when: neovim_check.results | selectattr('rc', 'ne', 0) | list | length > 0
-  changed_when: true
+- name: Install Neovim packages
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ neovim_packages }}"
+    paru_label: neovim
 
 - name: Check for existing ~/.config/nvim
   ansible.builtin.stat:

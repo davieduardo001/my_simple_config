@@ -1,18 +1,10 @@
 ---
-- name: Check which base packages are already installed
-  ansible.builtin.command:
-    cmd: "pacman -Q {{ item }}"
-  loop: "{{ pacman_packages }}"
-  register: pkg_check
-  failed_when: false
-  changed_when: false
-
-- name: Install missing base packages via paru
-  ansible.builtin.shell:
-    cmd: "paru -Sy --needed --noconfirm {{ pkg_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
-    executable: /bin/bash
-  when: pkg_check.results | selectattr('rc', 'ne', 0) | list | length > 0
-  changed_when: true
+- name: Install base packages
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ pacman_packages }}"
+    paru_label: base
 
 - name: Remove legacy packages
   become: true

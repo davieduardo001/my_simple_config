@@ -1,18 +1,10 @@
 ---
-- name: Check which desktop apps are already installed
-  ansible.builtin.command:
-    cmd: "pacman -Q {{ item }}"
-  loop: "{{ desktop_apps }}"
-  register: apps_check
-  failed_when: false
-  changed_when: false
-
-- name: Install missing desktop apps via paru
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ apps_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
-    executable: /bin/bash
-  when: apps_check.results | selectattr('rc', 'ne', 0) | list | length > 0
-  changed_when: true
+- name: Install desktop apps
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ desktop_apps }}"
+    paru_label: apps
 
 - name: Enable and start Syncthing for the current user
   become: true

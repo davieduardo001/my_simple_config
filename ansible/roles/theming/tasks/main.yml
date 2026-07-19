@@ -1,18 +1,10 @@
 ---
-- name: Check which theming packages are already installed
-  ansible.builtin.command:
-    cmd: "pacman -Q {{ item }}"
-  loop: "{{ theming_packages }}"
-  register: theming_check
-  failed_when: false
-  changed_when: false
-
-- name: Install missing theming packages via paru
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ theming_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
-    executable: /bin/bash
-  when: theming_check.results | selectattr('rc', 'ne', 0) | list | length > 0
-  changed_when: true
+- name: Install theming packages
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ theming_packages }}"
+    paru_label: tema
 
 # A paleta grayscale (theme_palette em group_vars/all.yml) é renderizada para
 # dentro de base_config/ — os arquivos gerados são versionados, então mudança

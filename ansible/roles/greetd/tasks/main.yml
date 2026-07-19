@@ -1,18 +1,10 @@
 ---
-- name: Check which greetd packages are already installed
-  ansible.builtin.command:
-    cmd: "pacman -Q {{ item }}"
-  loop: "{{ greetd_packages }}"
-  register: greetd_check
-  failed_when: false
-  changed_when: false
-
-- name: Install missing greetd packages via paru
-  ansible.builtin.shell:
-    cmd: "paru -S --needed --noconfirm {{ greetd_check.results | selectattr('rc', 'ne', 0) | map(attribute='item') | join(' ') }}"
-    executable: /bin/bash
-  when: greetd_check.results | selectattr('rc', 'ne', 0) | list | length > 0
-  changed_when: true
+- name: Install greetd packages
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ greetd_packages }}"
+    paru_label: greetd
 
 - name: Configure greetd (tuigreet → Hyprland)
   become: true

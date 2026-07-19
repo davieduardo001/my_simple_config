@@ -1,0 +1,41 @@
+---
+# Instalação resiliente via paru: um pacote por vez, com retry.
+# Instalar tudo num comando só significa que um único pacote com falha
+# transitória do AUR derruba a lista inteira — foi assim que o swww ficou
+# de fora sem ninguém perceber.
+#
+# Uso:
+#   - ansible.builtin.include_role:
+#       name: paru_install
+#     vars:
+#       paru_packages: "{{ hyprland_packages }}"
+#       paru_label: Hyprland
+
+- name: "Check which {{ paru_label | default('') }} packages are already installed"
+  ansible.builtin.command:
+    cmd: "pacman -Q {{ item }}"
+  loop: "{{ paru_packages }}"
+  register: paru_check
+  failed_when: false
+  changed_when: false
+
+- name: "Install missing {{ paru_label | default('') }} packages via paru"
+  ansible.builtin.shell:
+    cmd: "paru -S --needed --noconfirm {{ item.item }}"
+    executable: /bin/bash
+  loop: "{{ paru_check.results | selectattr('rc', 'ne', 0) | list }}"
+  loop_control:
+    label: "{{ item.item }}"
+  register: paru_install
+  until: paru_install.rc == 0
+  retries: 2
+  delay: 5
+  failed_when: false
+  changed_when: paru_install.rc == 0
+
+- name: "Report {{ paru_label | default('') }} packages that failed to install"
+  ansible.builtin.debug:
+    msg: >-
+      FALHOU ao instalar: {{ paru_install.results | selectattr('rc', 'ne', 0) | map(attribute='item.item') | join(', ') }}
+      — o resto da lista foi instalado. Rode o playbook de novo para tentar só esses.
+  when: paru_install.results | default([]) | selectattr('rc', 'ne', 0) | list | length > 0
