@@ -41,7 +41,8 @@
         "format-ethernet": "󰈀  {ipaddr}",
         "format-disconnected": "󰖪  off",
         "tooltip-format": "{ifname} · {ipaddr}",
-        "max-length": 24
+        "max-length": 24,
+        "on-click": "~/.config/hypr/scripts/wifi-menu.sh"
     },
 
     "bluetooth": {
