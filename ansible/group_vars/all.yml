@@ -71,6 +71,8 @@ hyprland_packages:
   - noto-fonts-emoji
 
 # --- Apps desktop ---
+default_browser: "firefox.desktop"
+
 desktop_apps:
   - onlyoffice-bin
   - gnome-calculator

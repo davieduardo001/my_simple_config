@@ -20,3 +20,26 @@
     name: "syncthing@{{ ansible_user_id }}.service"
     enabled: true
     state: started
+
+- name: Check current default browser
+  ansible.builtin.command:
+    cmd: xdg-settings get default-web-browser
+  register: browser_check
+  failed_when: false
+  changed_when: false
+
+- name: Set default browser
+  ansible.builtin.command:
+    cmd: "xdg-settings set default-web-browser {{ default_browser }}"
+  when: browser_check.stdout | default('') != default_browser
+  changed_when: true
+
+# xdg-settings cobre http/https; estes dois pegam arquivos .html abertos
+# pelo gerenciador de arquivos
+- name: Set default handler for local HTML files
+  ansible.builtin.command:
+    cmd: "xdg-mime default {{ default_browser }} {{ item }}"
+  loop:
+    - text/html
+    - application/xhtml+xml
+  changed_when: true
