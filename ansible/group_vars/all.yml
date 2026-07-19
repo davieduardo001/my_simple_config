@@ -33,6 +33,7 @@ packages_absent:
   - rofi
   - brave-bin
   - swww
+  - hyprpaper
   - mcmojave-circle-icon-theme-git
   - whitesur-icon-theme-git
   - fluent-icon-theme-git
@@ -53,7 +54,7 @@ hyprland_packages:
   - waybar
   - swaync
   - rofi-wayland
-  - hyprpaper
+  - swaybg
   - cliphist
   - grim
   - slurp

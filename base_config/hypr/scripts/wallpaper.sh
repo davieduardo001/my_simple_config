@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Aplica um wallpaper aleatório de ~/.config/wallpapers via hyprpaper,
+# Aplica um wallpaper aleatório de ~/.config/wallpapers via swaybg,
 # Rode de novo para trocar.
 set -uo pipefail
 
