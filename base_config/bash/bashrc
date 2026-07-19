@@ -19,7 +19,7 @@ aliases=(general)
 plugins=(git bashmarks)
 
 # --- PATH base ---
-export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # --- fnm (Node) ---
 command -v fnm &>/dev/null && eval "$(fnm env --use-on-cd)"
@@ -31,10 +31,6 @@ command -v pyenv &>/dev/null && eval "$(pyenv init -)"
 
 # --- Rust ---
 [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
-
-# --- Bun ---
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 # --- flyctl ---
 export FLYCTL_INSTALL="$HOME/.fly"

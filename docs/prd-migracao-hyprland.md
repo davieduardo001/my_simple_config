@@ -158,7 +158,7 @@ Sem Figma — a referência visual é textual:
 |---|---|---|
 | 1 | Symlinks de dotfiles (bashrc, fastfetch, ghostty, rofi) | Role `dotfiles` cria/mantém todos os links, agora incluindo hypr/waybar/swaync |
 | 2 | Ghostty com tema Min Dark e fonte JetBrainsMono | Config preservada e symlinkada |
-| 3 | Runtimes: NVM/Node, pyenv, Bun, Rust | Roles inalteradas, instalam normalmente |
+| 3 | Runtimes: Node (fnm, trocou o NVM), pyenv, Rust | Bun removido em 2026-07-18 (redundante com Node) |
 | 4 | Oh-My-Bash + Starship no shell | Prompt e plugins intactos |
 | 5 | Fontes Nerd (CaskaydiaCove, JetBrainsMono) | Instaladas e detectadas pelo fontconfig |
 | 6 | paru + pacotes AUR restantes (ghostty, onlyoffice, localsend) | Instalação `--needed` idempotente |

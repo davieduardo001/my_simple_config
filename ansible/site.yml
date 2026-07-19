@@ -36,7 +36,6 @@
     - flatpak
     - { role: sudoers, vars: { sudoers_state: absent } }
     - pyenv
-    - bun
     - rust
     - oh_my_bash
     - dotfiles

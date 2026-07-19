@@ -25,7 +25,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |
 | Fontes | CaskaydiaCove & JetBrainsMono Nerd Fonts (pacotes oficiais) |
 | Ícones/cursor | Papirus-Dark (repo oficial) + macOS cursor (apple_cursor) |
-| Runtimes | Node (fnm), Python (pyenv), Bun, Rust (rustup) |
+| Runtimes | Node (fnm), Python (pyenv), Rust (rustup) |
 | Rede | NetworkManager + BlueZ (instalados e habilitados pelo playbook) |
 | AUR helper | paru — **toda** instalação de pacote passa por ele |
 
@@ -118,7 +118,7 @@ ansible/
     ├── neovim/           # Neovim + clone da config LazyVim
     ├── apps/             # OnlyOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
     ├── flatpak/          # Flatpak + Flathub (infra pronta, sem apps por padrão)
-    ├── node|pyenv|bun|rust|oh_my_bash|fonts/
+    ├── node|pyenv|rust|oh_my_bash|fonts/
     ├── dotfiles/         # symlinks de tudo em base_config/ (+ wallpapers)
     ├── github_cli/       # gh auth check
     └── claude/           # Claude Code CLI + RTK
