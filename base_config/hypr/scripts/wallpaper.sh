@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Aplica um wallpaper aleatório de ~/.config/wallpapers via swww,
-# com transição animada. Rode de novo para trocar.
+# Aplica um wallpaper aleatório de ~/.config/wallpapers via hyprpaper,
+# Rode de novo para trocar.
 set -uo pipefail
 
 WALL_DIR="$HOME/.config/wallpapers"

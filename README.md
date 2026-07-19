@@ -12,7 +12,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Barra | Waybar |
 | Control center | swaync — painel lateral estilo celular (`Super+N`) |
 | Launcher | Rofi (wayland nativo), tema Spotlight grayscale, `Super+Space` |
-| Wallpaper | swww (transição animada, aleatório de `wallpapers/`) |
+| Wallpaper | hyprpaper (aleatório de `wallpapers/`, `Super+W`) |
 | Lock/idle | hyprlock + hypridle |
 | Screenshot | grim + slurp + satty (`Super+Shift+S`, estilo Windows) |
 | Clipboard | cliphist (`Super+V`) |
@@ -93,7 +93,7 @@ dicionário: `theme_palette` em `ansible/group_vars/all.yml`. Edite lá e rode
 ### Trocar o wallpaper
 
 `~/.config/hypr/scripts/wallpaper.sh` aplica um aleatório de `wallpapers/`
-com transição do swww. Roda no autostart; rode de novo pra sortear outro.
+via hyprpaper. Roda no autostart; `Super+W` sorteia outro, `Super+Shift+W` escolhe.
 
 ## Estrutura
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Funções compartilhadas pelos scripts de wallpaper.
+# Funções compartilhadas pelos scripts de wallpaper (hyprpaper).
 # Scripts chamados por keybind não têm terminal, então todo erro vira
 # notificação — senão a falha acontece em silêncio.
 
@@ -10,25 +10,32 @@ die() {
 }
 
 ensure_daemon() {
-    command -v swww &>/dev/null || die "swww não está instalado (rode o playbook com --tags hyprland)"
+    command -v hyprpaper &>/dev/null \
+        || die "hyprpaper não está instalado — rode: paru -S hyprpaper"
 
-    if ! swww query &>/dev/null; then
-        swww-daemon &>/dev/null &
-        for _ in $(seq 1 50); do
-            swww query &>/dev/null && return 0
+    if ! pgrep -x hyprpaper &>/dev/null; then
+        hyprpaper &>/dev/null &
+        for _ in $(seq 1 30); do
+            pgrep -x hyprpaper &>/dev/null && sleep 0.3 && return 0
             sleep 0.1
         done
-        die "swww-daemon não subiu"
+        die "hyprpaper não subiu"
     fi
 }
 
 apply_wallpaper() {
     local wall="$1"
     ensure_daemon
-    swww img "$wall" \
-        --transition-type grow \
-        --transition-pos center \
-        --transition-fps 60 \
-        --transition-duration 1.2 \
-        || die "swww img falhou em $(basename "$wall")"
+
+    # unload all evita encher a RAM ao trocar várias vezes
+    hyprctl hyprpaper unload all &>/dev/null
+
+    hyprctl hyprpaper preload "$wall" &>/dev/null \
+        || die "preload falhou em $(basename "$wall")"
+
+    # monitor vazio antes da vírgula = todos os monitores
+    hyprctl hyprpaper wallpaper ",$wall" &>/dev/null \
+        || die "não consegui aplicar $(basename "$wall")"
+
+    echo "$wall" > "$HOME/.cache/current-wallpaper"
 }
