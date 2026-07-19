@@ -136,6 +136,9 @@ theme_palette:
   text: "d4d4d4"
   text_hi: "eeeeee"
 
-# --- Flatpak apps ---
-flatpak_apps:
+# --- Flatpak apps (infra fica pronta; nenhum app por padrão) ---
+flatpak_apps: []
+
+# Flatpaks legados a remover
+flatpak_apps_absent:
   - app.zen_browser.zen

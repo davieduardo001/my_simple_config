@@ -19,7 +19,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Shell | Bash + Oh-My-Bash + Starship |
 | Terminal | Ghostty (Min Dark, JetBrainsMono) |
 | Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) |
-| Browser | Firefox + Chromium + Zen Browser (Flatpak) |
+| Browser | Firefox + Chromium |
 | Office | OnlyOffice (AUR) — visualização/edição leve de docx/xlsx/pptx |
 | Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
 | CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |
@@ -117,7 +117,7 @@ ansible/
     ├── theming/          # ícones/cursor + renderiza a paleta grayscale
     ├── neovim/           # Neovim + clone da config LazyVim
     ├── apps/             # OnlyOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
-    ├── flatpak/          # Flathub + Zen Browser
+    ├── flatpak/          # Flatpak + Flathub (infra pronta, sem apps por padrão)
     ├── node|pyenv|bun|rust|oh_my_bash|fonts/
     ├── dotfiles/         # symlinks de tudo em base_config/ (+ wallpapers)
     ├── github_cli/       # gh auth check
