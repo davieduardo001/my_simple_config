@@ -6,4 +6,4 @@ configuration {
     font: "JetBrainsMono Nerd Font 12";
 }
 
-@theme "spotlight-gray";
+@theme "spotlight-gray"

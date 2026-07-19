@@ -1,5 +1,5 @@
 /* Spotlight-style, grayscale — rofi-wayland nativo */
-@import "colors.rasi";
+@import "colors.rasi"
 
 * {
     background-color: transparent;
@@ -8,7 +8,7 @@
 }
 
 window {
-    background-color: @bg_alt;
+    background-color: @bg-alt;
     border: 2px;
     border-color: @border;
     border-radius: 14px;
@@ -33,13 +33,13 @@ inputbar {
 
 prompt {
     enabled: true;
-    text-color: @text_dim;
+    text-color: @text-dim;
 }
 
 entry {
     placeholder: "Buscar…";
-    placeholder-color: @text_dim;
-    text-color: @text_hi;
+    placeholder-color: @text-dim;
+    text-color: @text-hi;
     cursor: text;
 }
 
@@ -65,7 +65,7 @@ element alternate.normal {
 
 element selected.normal {
     background-color: @surface2;
-    text-color: @text_hi;
+    text-color: @text-hi;
 }
 
 element-icon {
@@ -86,5 +86,5 @@ message {
 }
 
 textbox {
-    text-color: @text_dim;
+    text-color: @text-dim;
 }
