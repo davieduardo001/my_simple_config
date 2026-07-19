@@ -48,7 +48,8 @@
         "format": "󰂯",
         "format-connected": "󰂱 {num_connections}",
         "format-disabled": "󰂲",
-        "tooltip-format": "{controller_alias}\t{controller_address}"
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "on-click": "blueman-manager"
     },
 
     "pulseaudio": {

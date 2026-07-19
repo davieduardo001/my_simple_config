@@ -84,6 +84,7 @@ network_packages:
   - networkmanager
   - bluez
   - bluez-utils
+  - blueman
 network_services:
   - NetworkManager.service
   - bluetooth.service
