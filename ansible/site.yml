@@ -31,6 +31,7 @@
     - { role: theming,  tags: [theming] }
     - { role: neovim,   tags: [neovim] }
     - { role: apps,     tags: [apps] }
+    - fonts
     - flatpak
     - { role: sudoers, vars: { sudoers_state: absent } }
     - node
@@ -38,7 +39,6 @@
     - bun
     - rust
     - oh_my_bash
-    - fonts
     - dotfiles
     - { role: github_cli, tags: [github_cli, interactive] }
     - { role: claude,     tags: [claude] }

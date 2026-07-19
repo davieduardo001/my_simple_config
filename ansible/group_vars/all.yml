@@ -98,11 +98,10 @@ neovim_packages:
 lazyvim_repo: "https://github.com/davieduardo001/lazyvim-config"
 lazyvim_dest: "{{ ansible_env.HOME }}/.config/nvim"
 
-# --- Nerd Fonts ---
-nerd_fonts_version: "v3.4.0"
-nerd_fonts:
-  - CaskaydiaCove
-  - JetBrainsMono
+# --- Nerd Fonts (pacotes oficiais, via paru) ---
+fonts_packages:
+  - ttf-cascadia-code-nerd
+  - ttf-jetbrains-mono-nerd
 
 # --- NVM ---
 nvm_version: "v0.40.1"
