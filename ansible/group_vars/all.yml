@@ -74,6 +74,12 @@ hyprland_packages:
 default_browser: "firefox.desktop"
 
 desktop_apps:
+  - thunar
+  - thunar-volman        # monta pendrive/HD externo automaticamente
+  - gvfs                 # lixeira, rede, dispositivos
+  - tumbler              # miniaturas de imagem/vídeo
+  - ffmpegthumbnailer
+  - file-roller          # abrir/criar zip, tar, rar
   - onlyoffice-bin
   - gnome-calculator
   - syncthing
