@@ -13,3 +13,32 @@
     enabled: true
     state: started
   loop: "{{ network_services }}"
+
+# Data/hora pela rede (NTP). O Arch não habilita o timesyncd numa instalação
+# limpa — sem isso o relógio depende só da RTC e vai ficando para trás.
+- name: Check current timezone
+  ansible.builtin.command:
+    cmd: timedatectl show -p Timezone --value
+  register: tz_check
+  changed_when: false
+
+- name: Set timezone
+  become: true
+  ansible.builtin.command:
+    cmd: "timedatectl set-timezone {{ system_timezone }}"
+  when: tz_check.stdout != system_timezone
+  changed_when: true
+
+- name: Enable network time sync (systemd-timesyncd)
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: true
+    state: started
+
+- name: Turn on NTP
+  become: true
+  ansible.builtin.command:
+    cmd: timedatectl set-ntp true
+  register: ntp_state
+  changed_when: false

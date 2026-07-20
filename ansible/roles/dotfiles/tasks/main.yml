@@ -63,6 +63,16 @@
     force: true
   loop: "{{ dotfiles_file_links }}"
 
+- name: Link config files that live in $HOME
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/{{ item.src }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.dest }}"
+    state: link
+    force: true
+  loop: "{{ dotfiles_home_links }}"
+  loop_control:
+    label: "{{ item.dest }}"
+
 - name: Link wallpapers into ~/.config
   ansible.builtin.file:
     src: "{{ repo_root }}/wallpapers"

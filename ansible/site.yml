@@ -34,10 +34,12 @@
     - fonts
     - node
     - flatpak
+    # depois de `node` porque a limpeza do install antigo via npm usa o fnm,
+    # e antes do fechamento da janela sudoers porque instala via paru
+    - { role: claude, tags: [claude] }
     - { role: sudoers, vars: { sudoers_state: absent } }
     - pyenv
     - rust
     - oh_my_bash
     - dotfiles
     - { role: github_cli, tags: [github_cli, interactive] }
-    - { role: claude,     tags: [claude] }

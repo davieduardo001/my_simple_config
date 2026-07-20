@@ -1,14 +1,22 @@
 ---
-- name: Check if Claude Code CLI is installed
-  ansible.builtin.command: which claude
-  register: claude_check
-  changed_when: false
-  failed_when: false
+# Instalado via paru (AUR), não `npm install -g`: mantém a atualização junto
+# do `paru -Syu` e tira o CLI da dependência do Node/fnm.
+- name: Install Claude Code CLI
+  ansible.builtin.include_role:
+    name: paru_install
+  vars:
+    paru_packages: "{{ claude_packages }}"
+    paru_label: Claude
 
-- name: Install Claude Code CLI via npm
+# Sobra da instalação antiga via npm — se ficar, o binário do npm pode
+# aparecer no PATH antes do /usr/bin/claude do pacote
+- name: Remove any leftover npm-global install of Claude Code
   ansible.builtin.shell:
     cmd: |
       eval "$(fnm env)"
-      npm install -g @anthropic-ai/claude-code
+      npm ls -g --depth=0 @anthropic-ai/claude-code >/dev/null 2>&1 || exit 0
+      npm uninstall -g @anthropic-ai/claude-code
     executable: /bin/bash
-  when: claude_check.rc != 0
+  register: claude_npm_cleanup
+  changed_when: "'removed' in claude_npm_cleanup.stdout"
+  failed_when: false

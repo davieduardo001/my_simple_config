@@ -23,6 +23,7 @@ pacman_packages:
   - zoxide
   - fzf
   - btop
+  - tmux
   - timeshift
   - reflector
 
@@ -34,14 +35,26 @@ packages_absent:
   - brave-bin
   - swww
   - hyprpaper
+  - ghostty                # substituído por alacritty
+  - thunar                 # substituído por dolphin
+  - thunar-volman
+  - tumbler                # thumbnailers do thunar — o dolphin usa kio-extras
+  - ffmpegthumbnailer
+  - file-roller            # substituído por ark
   - mcmojave-circle-icon-theme-git
   - whitesur-icon-theme-git
   - fluent-icon-theme-git
   - quintom-cursor-theme-git
 
 # --- AUR packages ---
-aur_packages:
-  - ghostty
+# Vazio hoje: o alacritty veio do repo oficial e o ghostty saiu. Os únicos
+# pacotes AUR que sobraram vivem em desktop_apps e claude_packages.
+aur_packages: []
+
+# --- Claude Code ---
+# Pacote AUR, não npm -g: assim o update entra no `paru -Syu` junto com o resto.
+claude_packages:
+  - claude-code
 
 # --- Hyprland desktop ---
 hyprland_packages:
@@ -54,6 +67,7 @@ hyprland_packages:
   - waybar
   - swaync
   - rofi-wayland
+  - alacritty
   - swaybg
   - cliphist
   - grim
@@ -76,12 +90,12 @@ hyprland_packages:
 default_browser: "firefox.desktop"
 
 desktop_apps:
-  - thunar
-  - thunar-volman        # monta pendrive/HD externo automaticamente
-  - gvfs                 # lixeira, rede, dispositivos
-  - tumbler              # miniaturas de imagem/vídeo
-  - ffmpegthumbnailer
-  - file-roller          # abrir/criar zip, tar, rar
+  - nwg-displays         # GUI de monitores — escreve o hypr/monitors.conf
+  - dolphin
+  - kio-extras           # miniaturas, rede (smb/sftp), dispositivos
+  - ffmpegthumbs         # miniaturas de vídeo
+  - ark                  # abrir/criar zip, tar, rar
+  - gvfs                 # lixeira/montagem — ainda usado por apps GTK
   - onlyoffice-bin
   - gnome-calculator
   - syncthing
@@ -98,6 +112,9 @@ network_packages:
 network_services:
   - NetworkManager.service
   - bluetooth.service
+
+# Data/hora via NTP (systemd-timesyncd), habilitado pela role network
+system_timezone: America/Sao_Paulo
 
 # --- Login (greetd + tuigreet) ---
 greetd_packages:

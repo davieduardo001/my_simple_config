@@ -1,11 +1,15 @@
 ---
 dotfiles_links:
   - fastfetch
-  - ghostty
+  - alacritty
   - rofi
   - hypr
   - waybar
   - swaync
+
+# Configs que o app procura no $HOME, não em ~/.config
+dotfiles_home_links:
+  - { src: tmux/tmux.conf, dest: .tmux.conf }
 
 dotfiles_file_links:
   - gtk-3.0/settings.ini
