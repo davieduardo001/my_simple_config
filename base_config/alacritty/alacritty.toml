@@ -1,4 +1,4 @@
-# Alacritty — porte 1:1 da config antiga do Ghostty (tema Min Dark).
+# Alacritty (tema Kanagawa Dragon).
 # Formato TOML (alacritty >= 0.13).
 
 [env]
@@ -35,38 +35,38 @@ history = 10000
 [cursor]
 style = { shape = "Block", blinking = "On" }
 
-# --- Theme (Min Dark) ---
+# --- Theme (Kanagawa Dragon) ---
 [colors.primary]
-background = "#1f1f1f"
-foreground = "#d4d4d4"
+background = "#181616"
+foreground = "#c5c9c5"
 
 [colors.cursor]
-cursor = "#fafafa"
-text = "#1f1f1f"
+cursor = "#c5c9c5"
+text = "#181616"
 
 [colors.selection]
-background = "#2a2a2a"
-text = "#f5f5f5"
+background = "#2d4f67"
+text = "#c8c093"
 
 [colors.normal]
-black   = "#1a1a1a"
-red     = "#f97583"
-green   = "#8fae6a"
-yellow  = "#ffab70"
-blue    = "#79b8ff"
-magenta = "#b392f0"
-cyan    = "#9db1c5"
-white   = "#b0b0b0"
+black   = "#0d0c0c"
+red     = "#c4746e"
+green   = "#8a9a7b"
+yellow  = "#c4b28a"
+blue    = "#8ba4b0"
+magenta = "#a292a3"
+cyan    = "#8ea4a2"
+white   = "#c8c093"
 
 [colors.bright]
-black   = "#5c5c5c"
-red     = "#ff7a84"
-green   = "#a8d477"
-yellow  = "#ffcb99"
-blue    = "#a3d1ff"
-magenta = "#d1baf7"
-cyan    = "#c3d3e0"
-white   = "#fafafa"
+black   = "#a6a69c"
+red     = "#e46876"
+green   = "#87a987"
+yellow  = "#e6c384"
+blue    = "#7fb4ca"
+magenta = "#957fb8"
+cyan    = "#7aa89f"
+white   = "#c5c9c5"
 
 [[keyboard.bindings]]
 key = "Return"
