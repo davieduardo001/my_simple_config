@@ -20,7 +20,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Terminal | Alacritty (Kanagawa Dragon, JetBrainsMono) + tmux para abas/splits |
 | Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) (Kanagawa Dragon) |
 | Arquivos | Nemo (+ nemo-fileroller, tumbler) — `Super+E` |
-| Browser | Firefox + Chromium |
+| Browser | Chromium (padrão) + Firefox |
 | Office | OnlyOffice (AUR) — visualização/edição leve de docx/xlsx/pptx |
 | Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
 | CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |

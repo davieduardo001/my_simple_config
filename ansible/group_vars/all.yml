@@ -88,7 +88,7 @@ hyprland_packages:
   - noto-fonts-emoji
 
 # --- Apps desktop ---
-default_browser: "firefox.desktop"
+default_browser: "chromium.desktop"
 
 desktop_apps:
   - nwg-displays         # GUI de monitores — escreve o hypr/monitors.conf
