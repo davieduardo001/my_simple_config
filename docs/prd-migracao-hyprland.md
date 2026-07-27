@@ -7,8 +7,8 @@
 > Divergências conhecidas em relação ao estado atual (a fonte de verdade é o
 > `README.md` + o playbook):
 > - Wallpaper: especificado com `swww`, passou por `hyprpaper`, hoje é **`swaybg`**.
-> - Terminal: especificado como Ghostty, hoje é **Alacritty** + tmux (mesmo tema Min Dark).
-> - Gerenciador de arquivos: hoje é **Dolphin**, não Thunar.
+> - Terminal: especificado como Ghostty, hoje é **Alacritty** + tmux (tema Kanagawa Dragon).
+> - Gerenciador de arquivos: passou por Thunar e Dolphin, hoje é **Nemo**.
 
 ## Decisões tomadas (perguntas resolvidas em 2026-07-18)
 

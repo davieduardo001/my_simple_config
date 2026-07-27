@@ -17,9 +17,9 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Screenshot | grim + slurp + satty (`Super+Shift+S`, estilo Windows) |
 | Clipboard | cliphist (`Super+V`) |
 | Shell | Bash + Oh-My-Bash + Starship |
-| Terminal | Alacritty (Min Dark, JetBrainsMono) + tmux para abas/splits |
-| Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) |
-| Arquivos | Dolphin (+ kio-extras, ffmpegthumbs, ark) — `Super+E` |
+| Terminal | Alacritty (Kanagawa Dragon, JetBrainsMono) + tmux para abas/splits |
+| Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) (Kanagawa Dragon) |
+| Arquivos | Nemo (+ nemo-fileroller, tumbler) — `Super+E` |
 | Browser | Firefox + Chromium |
 | Office | OnlyOffice (AUR) — visualização/edição leve de docx/xlsx/pptx |
 | Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
@@ -64,7 +64,7 @@ Depois é só **reboot** → o boot cai no tuigreet → login → Hyprland.
 | `Super+N` | Control center lateral (swaync) |
 | `Super+P` | Configurar monitores (nwg-displays) |
 | `Super+Enter` | Terminal (Alacritty) |
-| `Super+E` | Gerenciador de arquivos (Dolphin) |
+| `Super+E` | Gerenciador de arquivos (Nemo) |
 | `Super+Shift+S` | Screenshot com anotação (satty) |
 | `Print` / `Shift+Print` | Região → clipboard / tela → arquivo |
 | `Super+V` | Histórico do clipboard |
@@ -162,7 +162,7 @@ ansible/
     ├── greetd/           # tuigreet → Hyprland, desabilita DM antigo
     ├── theming/          # ícones/cursor + renderiza a paleta grayscale
     ├── neovim/           # Neovim + clone da config LazyVim
-    ├── apps/             # Dolphin, OnlyOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
+    ├── apps/             # Nemo, OnlyOffice, calculadora, Syncthing, LocalSend, Firefox, Chromium
     ├── flatpak/          # Flatpak + Flathub (infra pronta, sem apps por padrão)
     ├── node|pyenv|rust|oh_my_bash|fonts/
     ├── dotfiles/         # symlinks de tudo em base_config/ (+ wallpapers)

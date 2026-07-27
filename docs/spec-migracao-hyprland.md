@@ -6,10 +6,10 @@
 > Divergências conhecidas em relação ao estado atual (a fonte de verdade é o
 > `README.md` + o playbook):
 > - Wallpaper: o texto cita `swww-daemon`; hoje é **`swaybg`**.
-> - Terminal: o texto cita Ghostty; hoje é **Alacritty** + tmux (mesmo tema Min Dark).
-> - Gerenciador de arquivos: hoje é **Dolphin**, não Thunar.
+> - Terminal: o texto cita Ghostty; hoje é **Alacritty** + tmux (tema Kanagawa Dragon).
+> - Gerenciador de arquivos: passou por Thunar e Dolphin, hoje é **Nemo**.
 >
-> `swww`, `hyprpaper`, `ghostty` e `thunar` estão em `packages_absent`.
+> `swww`, `hyprpaper`, `ghostty`, `thunar` e `dolphin` estão em `packages_absent`.
 > **PRD de origem:** [`docs/prd-migracao-hyprland.md`](./prd-migracao-hyprland.md) (aprovado)
 > **Card/épico:** N/A — repo pessoal, sem gerenciador de tarefas
 

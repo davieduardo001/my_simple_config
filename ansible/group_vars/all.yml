@@ -36,11 +36,12 @@ packages_absent:
   - swww
   - hyprpaper
   - ghostty                # substituído por alacritty
-  - thunar                 # substituído por dolphin
+  - thunar                 # substituído por nemo
   - thunar-volman
-  - tumbler                # thumbnailers do thunar — o dolphin usa kio-extras
-  - ffmpegthumbnailer
-  - file-roller            # substituído por ark
+  - dolphin                # substituído por nemo
+  - kio-extras             # dependia só do dolphin
+  - ffmpegthumbs           # thumbnailer KIO do dolphin — nemo usa tumbler
+  - ark                    # substituído por nemo-fileroller
   - mcmojave-circle-icon-theme-git
   - whitesur-icon-theme-git
   - fluent-icon-theme-git
@@ -91,11 +92,11 @@ default_browser: "firefox.desktop"
 
 desktop_apps:
   - nwg-displays         # GUI de monitores — escreve o hypr/monitors.conf
-  - dolphin
-  - kio-extras           # miniaturas, rede (smb/sftp), dispositivos
-  - ffmpegthumbs         # miniaturas de vídeo
-  - ark                  # abrir/criar zip, tar, rar
-  - gvfs                 # lixeira/montagem — ainda usado por apps GTK
+  - nemo
+  - nemo-fileroller      # abrir/criar zip, tar, rar (puxa file-roller)
+  - tumbler              # miniaturas de arquivo do nemo
+  - ffmpegthumbnailer    # miniaturas de vídeo p/ o tumbler
+  - gvfs                 # lixeira/montagem/rede (smb/sftp)
   - onlyoffice-bin
   - gnome-calculator
   - syncthing
@@ -140,7 +141,7 @@ theming_packages:
   - papirus-icon-theme
   - apple_cursor
   - qt5ct               # tema escuro p/ apps Qt5
-  - qt6ct               # tema escuro p/ apps Qt6 (Dolphin etc.)
+  - qt6ct               # tema escuro p/ apps Qt6 (OnlyOffice etc.)
   - adwaita-qt5         # dá aos apps Qt o visual do Adwaita
   - adwaita-qt6
 
