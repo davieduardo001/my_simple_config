@@ -88,7 +88,7 @@ hyprland_packages:
   - noto-fonts-emoji
 
 # --- Apps desktop ---
-default_browser: "chromium.desktop"
+default_browser: "firefox.desktop"
 
 desktop_apps:
   - nwg-displays         # GUI de monitores — escreve o hypr/monitors.conf
@@ -138,16 +138,28 @@ fonts_packages:
 
 # --- Icon/cursor/GTK theming ---
 theming_packages:
-  - papirus-icon-theme
   - apple_cursor
-  - qt5ct               # tema escuro p/ apps Qt5
-  - qt6ct               # tema escuro p/ apps Qt6 (OnlyOffice etc.)
-  - adwaita-qt5         # dá aos apps Qt o visual do Adwaita
+  - whitesur-icon-theme  # AUR — ícones estilo macOS Big Sur
+  - sassc                # build dep do WhiteSur-gtk-theme (clonado à mão, ver theming_gtk_theme_alt_repo)
+  - qt5ct                # tema escuro p/ apps Qt5
+  - qt6ct                # tema escuro p/ apps Qt6 (OnlyOffice etc.)
+  - adwaita-qt5          # dá aos apps Qt o visual do Adwaita
   - adwaita-qt6
 
-theming_icon_theme: "Papirus-Dark"
+# O WhiteSur-gtk-theme do AUR só constrói a variante 'normal' dos botões de
+# janela (ícones planos). A variante 'alt' — as bolinhas coloridas estilo
+# macOS — só sai clonando o repo e rodando o install.sh na mão (role
+# theming faz isso, instala em ~/.themes, sem sudo).
+theming_gtk_theme_alt_repo: "https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
+
+theming_icon_theme: "WhiteSur-dark"
 theming_cursor_theme: "macOS"
-theming_gtk_theme: "Adwaita"
+theming_gtk_theme: "WhiteSur-Dark-alt"
+
+# Botões da janela à esquerda, ordem fechar/minimizar/maximizar — estilo
+# macOS. Chromium lê isso via GSettings pro próprio frame (não é CSD real,
+# então continua sem a bolinha colorida — só a posição/ordem mudam).
+theming_button_layout: "close,minimize,maximize:"
 
 # --- Paleta grayscale: única fonte de verdade das cores do rice ---
 # A role theming renderiza estes valores em base_config/hypr/colors.conf,
@@ -155,15 +167,15 @@ theming_gtk_theme: "Adwaita"
 # base_config/rofi/colors.rasi (todos versionados). Trocar a paleta aqui e
 # re-rodar `--tags theming` re-tematiza o desktop inteiro.
 theme_palette:
-  bg: "0a0a0a"
-  bg_alt: "121212"
-  surface: "1a1a1a"
-  surface2: "242424"
-  border: "3a3a3a"
-  border_hi: "5a5a5a"
-  text_dim: "8a8a8a"
-  text: "d4d4d4"
-  text_hi: "eeeeee"
+  bg: "0a0b0d"
+  bg_alt: "12141a"
+  surface: "1a1d24"
+  surface2: "242830"
+  border: "3a4048"
+  border_hi: "5a626c"
+  text_dim: "8a9098"
+  text: "d4d8dc"
+  text_hi: "eef0f2"
 
 # --- Flatpak apps (infra fica pronta; nenhum app por padrão) ---
 flatpak_apps: []

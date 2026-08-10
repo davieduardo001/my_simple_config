@@ -6,6 +6,30 @@
     paru_packages: "{{ theming_packages }}"
     paru_label: tema
 
+# O pacote AUR whitesur-gtk-theme só traz a variante 'normal' dos botões
+# (ícones planos). A 'alt' (bolinhas coloridas estilo macOS) não é uma
+# opção de build do PKGBUILD, então clonamos e rodamos o install.sh oficial
+# na mão — vai pra ~/.themes, não precisa de sudo.
+- name: Check if WhiteSur-Dark-alt is already built
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.themes/WhiteSur-Dark-alt"
+  register: whitesur_alt_theme
+
+- name: Clone WhiteSur-gtk-theme source
+  ansible.builtin.git:
+    repo: "{{ theming_gtk_theme_alt_repo }}"
+    dest: "{{ ansible_env.HOME }}/.cache/whitesur-gtk-theme-src"
+    depth: 1
+    force: true
+  when: not whitesur_alt_theme.stat.exists
+
+- name: Build and install the WhiteSur-Dark-alt variant
+  ansible.builtin.command:
+    cmd: ./install.sh -a alt -c dark -o normal -t default
+    chdir: "{{ ansible_env.HOME }}/.cache/whitesur-gtk-theme-src"
+  when: not whitesur_alt_theme.stat.exists
+  changed_when: true
+
 # A paleta grayscale (theme_palette em group_vars/all.yml) é renderizada para
 # dentro de base_config/ — os arquivos gerados são versionados, então mudança
 # de paleta aparece como diff no git.
@@ -36,15 +60,19 @@
 
 - name: Apply GTK theme via gsettings
   ansible.builtin.shell:
-    cmd: "gsettings set org.gnome.desktop.interface {{ item.key }} '{{ item.value }}'"
+    cmd: "gsettings set {{ item.schema }} {{ item.key }} '{{ item.value }}'"
     executable: /bin/bash
   loop:
-    - { key: "icon-theme", value: "{{ theming_icon_theme }}" }
-    - { key: "cursor-theme", value: "{{ theming_cursor_theme }}" }
-    - { key: "gtk-theme", value: "{{ theming_gtk_theme }}" }
-    - { key: "color-scheme", value: "prefer-dark" }
+    - { schema: "org.gnome.desktop.interface", key: "icon-theme", value: "{{ theming_icon_theme }}" }
+    - { schema: "org.gnome.desktop.interface", key: "cursor-theme", value: "{{ theming_cursor_theme }}" }
+    - { schema: "org.gnome.desktop.interface", key: "gtk-theme", value: "{{ theming_gtk_theme }}" }
+    - { schema: "org.gnome.desktop.interface", key: "color-scheme", value: "prefer-dark" }
+    # botões de janela à esquerda estilo macOS — Chromium lê o schema gnome
+    # direto; o Nemo (família Cinnamon) lê o schema cinnamon
+    - { schema: "org.gnome.desktop.wm.preferences", key: "button-layout", value: "{{ theming_button_layout }}" }
+    - { schema: "org.cinnamon.desktop.wm.preferences", key: "button-layout", value: "{{ theming_button_layout }}" }
   loop_control:
-    label: "{{ item.key }}"
+    label: "{{ item.schema }}.{{ item.key }}"
   when: theming_has_session
   ignore_errors: true
   changed_when: true

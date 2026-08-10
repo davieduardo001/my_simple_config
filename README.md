@@ -7,7 +7,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 
 | Categoria | Ferramenta |
 |---|---|
-| Compositor | Hyprland (blur, cantos arredondados, animações custom) |
+| Compositor | Hyprland — visual "liquid glass": blur forte + vibrância, translucidez, cantos arredondados (16px), animações custom |
 | Login | greetd + tuigreet |
 | Barra | Waybar |
 | Control center | swaync — painel lateral estilo celular (`Super+N`) |
@@ -20,13 +20,14 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Terminal | Alacritty (Kanagawa Dragon, JetBrainsMono) + tmux para abas/splits |
 | Editor | Neovim + [LazyVim config](https://github.com/davieduardo001/lazyvim-config) (Kanagawa Dragon) |
 | Arquivos | Nemo (+ nemo-fileroller, tumbler) — `Super+E` |
-| Browser | Chromium (padrão) + Firefox |
+| Browser | Firefox (padrão, botões nativos estilo macOS) + Chromium |
 | Office | OnlyOffice (AUR) — visualização/edição leve de docx/xlsx/pptx |
 | Apps | GNOME Calculator, Syncthing (serviço habilitado), LocalSend |
 | CLI tools | eza, bat, zoxide, fzf, btop, fastfetch |
 | Fontes | CaskaydiaCove & JetBrainsMono Nerd Fonts (pacotes oficiais) |
-| Ícones/cursor | Papirus-Dark (repo oficial) + macOS cursor (apple_cursor) |
+| Ícones/cursor | WhiteSur-dark (AUR, estilo macOS Big Sur) + macOS cursor (apple_cursor) |
 | Tema escuro | GTK via `settings.ini` + gsettings · Qt via qt5ct/qt6ct (Fusion escuro) |
+| Botões de janela | WhiteSur-Dark-alt (variante `alt` do WhiteSur-gtk-theme, clonada e instalada em `~/.themes` pelo playbook) — bolinhas à esquerda estilo macOS. Nativo em apps GTK e no Firefox (CSD de verdade); Chromium só segue a posição/ordem, sem a bolinha (limitação dele) |
 | Runtimes | Node (fnm), Python (pyenv), Rust (rustup) |
 | Rede | NetworkManager + BlueZ (instalados e habilitados pelo playbook) |
 | Data/hora | NTP via systemd-timesyncd — timezone em `system_timezone` |

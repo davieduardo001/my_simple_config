@@ -1,13 +1,13 @@
 /* Gerado pela role theming — edite theme_palette em ansible/group_vars/all.yml */
 /* nomes usam hífen: o parser do rasi não aceita underscore */
 * {
-    bg: #0a0a0a;
-    bg-alt: #121212;
-    surface: #1a1a1a;
-    surface2: #242424;
-    border: #3a3a3a;
-    border-hi: #5a5a5a;
-    text-dim: #8a8a8a;
-    text: #d4d4d4;
-    text-hi: #eeeeee;
+    bg: #0a0b0d;
+    bg-alt: #12141a;
+    surface: #1a1d24;
+    surface2: #242830;
+    border: #3a4048;
+    border-hi: #5a626c;
+    text-dim: #8a9098;
+    text: #d4d8dc;
+    text-hi: #eef0f2;
 }

@@ -9,6 +9,8 @@
 > - Wallpaper: especificado com `swww`, passou por `hyprpaper`, hoje é **`swaybg`**.
 > - Terminal: especificado como Ghostty, hoje é **Alacritty** + tmux (tema Kanagawa Dragon).
 > - Gerenciador de arquivos: passou por Thunar e Dolphin, hoje é **Nemo**.
+> - Browser padrão: **Firefox** (não Chromium) — só ele tem botões de janela CSD nativos.
+> - Ícones: passou por McMojave e Papirus-Dark, hoje é **WhiteSur-dark**, com botões WhiteSur-Dark-alt (bolinhas macOS à esquerda) e visual "liquid glass" (blur/vibrância/translucidez).
 
 ## Decisões tomadas (perguntas resolvidas em 2026-07-18)
 

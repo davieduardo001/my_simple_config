@@ -8,6 +8,8 @@
 > - Wallpaper: o texto cita `swww-daemon`; hoje é **`swaybg`**.
 > - Terminal: o texto cita Ghostty; hoje é **Alacritty** + tmux (tema Kanagawa Dragon).
 > - Gerenciador de arquivos: passou por Thunar e Dolphin, hoje é **Nemo**.
+> - Browser padrão: **Firefox** (não Chromium) — só ele tem botões de janela CSD nativos.
+> - Ícones: passou por McMojave e Papirus-Dark, hoje é **WhiteSur-dark**, com botões WhiteSur-Dark-alt (bolinhas macOS à esquerda) e visual "liquid glass" (blur/vibrância/translucidez).
 >
 > `swww`, `hyprpaper`, `ghostty`, `thunar` e `dolphin` estão em `packages_absent`.
 > **PRD de origem:** [`docs/prd-migracao-hyprland.md`](./prd-migracao-hyprland.md) (aprovado)
