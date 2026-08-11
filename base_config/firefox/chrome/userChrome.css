@@ -1,0 +1,54 @@
+/* Botões de janela estilo macOS (bolinhas coloridas).
+ * O Firefox usa ícones "symbolic" (monocromáticos, via -moz-symbolic-icon)
+ * pra esses botões — nenhum tema GTK deixa isso colorido, só dá pra via
+ * CSS interno mesmo. Estrutura real (Firefox 153, browser.xhtml):
+ *   hbox.titlebar-buttonbox > toolbarbutton.titlebar-button.titlebar-{min,max,restore,close}
+ *     > .toolbarbutton-icon   (é aqui que o ícone/background-image entra)
+ */
+
+.titlebar-buttonbox-container {
+    margin-right: 10px !important;
+}
+
+.titlebar-buttonbox {
+    padding-inline-start: 12px !important;
+}
+
+.titlebar-button {
+    appearance: none !important;
+    -moz-appearance: none !important;
+    padding: 0 !important;
+    margin: 0 7px 0 0 !important;
+}
+
+.titlebar-button > .toolbarbutton-icon {
+    background-image: none !important;
+    width: 13px !important;
+    height: 13px !important;
+    min-width: 13px !important;
+    min-height: 13px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.titlebar-close > .toolbarbutton-icon {
+    background-color: #ff5f57 !important;
+}
+
+.titlebar-min > .toolbarbutton-icon {
+    background-color: #ffbd44 !important;
+}
+
+.titlebar-max > .toolbarbutton-icon,
+.titlebar-restore > .toolbarbutton-icon {
+    background-color: #00ca4e !important;
+}
+
+.titlebar-button:hover > .toolbarbutton-icon {
+    filter: brightness(1.15) !important;
+}
+
+.titlebar-button:hover:active > .toolbarbutton-icon {
+    filter: brightness(0.8) !important;
+}

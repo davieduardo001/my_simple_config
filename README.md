@@ -27,7 +27,7 @@ Um playbook instala tudo e conecta os dotfiles via symlinks.
 | Fontes | CaskaydiaCove & JetBrainsMono Nerd Fonts (pacotes oficiais) |
 | Ícones/cursor | WhiteSur-dark (AUR, estilo macOS Big Sur) + macOS cursor (apple_cursor) |
 | Tema escuro | GTK via `settings.ini` + gsettings · Qt via qt5ct/qt6ct (Fusion escuro) |
-| Botões de janela | WhiteSur-Dark-alt (variante `alt` do WhiteSur-gtk-theme, clonada e instalada em `~/.themes` pelo playbook) — bolinhas à esquerda estilo macOS. Nativo em apps GTK e no Firefox (CSD de verdade); Chromium só segue a posição/ordem, sem a bolinha (limitação dele) |
+| Botões de janela | WhiteSur-Dark-alt (variante `alt` do WhiteSur-gtk-theme, clonada e instalada em `~/.themes` pelo playbook) — bolinhas à esquerda estilo macOS em apps GTK. O Firefox não segue tema GTK pra isso (usa ícones symbolic monocromáticos) — as bolinhas dele vêm de `base_config/firefox/chrome/userChrome.css`, symlinkado pra dentro do profile pela role `apps`. Chromium só segue a posição/ordem, sem a bolinha (limitação dele) |
 | Runtimes | Node (fnm), Python (pyenv), Rust (rustup) |
 | Rede | NetworkManager + BlueZ (instalados e habilitados pelo playbook) |
 | Data/hora | NTP via systemd-timesyncd — timezone em `system_timezone` |
@@ -140,6 +140,46 @@ monitor = HDMI-A-1, preferred, auto, 1, mirror, eDP-1  # espelha o eDP-1
 
 `~/.config/hypr/scripts/wallpaper.sh` aplica um aleatório de `wallpapers/`
 via swaybg. Roda no autostart; `Super+W` sorteia outro, `Super+Shift+W` escolhe.
+
+### Cisco Packet Tracer (instalação manual)
+
+Não entra em `desktop_apps` porque a Cisco exige login pra baixar — não dá
+pra automatizar. O pacote AUR (`packettracer`) também costuma ficar
+desatualizado (fixado numa versão/checksum específica), então o fluxo é:
+
+1. Baixar o `.deb` (o passo chato, a Cisco esconde bem):
+   1. Cria conta grátis em [netacad.com](https://www.netacad.com) (ou loga
+      se já tiver).
+   2. Entra em [netacad.com/courses/packet-tracer](https://www.netacad.com/courses/packet-tracer)
+      e clica em **"Enroll"** / **"Self Enroll"** no curso "Introduction to
+      Packet Tracer" — sem se inscrever nesse curso o download fica
+      escondido, mesmo logado.
+   3. Depois de matriculado, abre o curso → aba **Resources** (ou
+      "Download Packet Tracer") → escolhe **Linux**.
+   4. Baixa a versão **64-bit para Ubuntu** — é um `.deb` mesmo sendo Arch
+      (o PKGBUILD extrai o conteúdo dele na marra), ex.:
+      `CiscoPacketTracer_901_Ubuntu_64bit.deb`.
+2. Se a versão baixada bater com a que o AUR espera, só `paru -S packettracer`
+   com o arquivo em `~/.cache/paru/clone/packettracer/`. Se não bater
+   (mensagem `local source ... was not found`), edita o PKGBUILD clonado:
+   ```bash
+   cd ~/.cache/paru/clone/packettracer
+   cp ~/Downloads/CiscoPacketTracer_XXX_Ubuntu_64bit.deb .
+   # no PKGBUILD: pkgver=X.Y.Z e source=('local://CiscoPacketTracer_XXX_Ubuntu_64bit.deb')
+   sha512sum CiscoPacketTracer_XXX_Ubuntu_64bit.deb   # cola o hash no sha512sums=()
+   makepkg --printsrcinfo > .SRCINFO
+   makepkg -si
+   ```
+3. O pacote só instala o AppImage (`/usr/lib/packettracer/packettracer.AppImage`),
+   sem `.desktop` nem entrada no `$PATH`. `base_config/packettracer/` resolve
+   isso — a role `apps` symlinka launcher, ícone e `.desktop` pra
+   `~/.local/{bin,share/applications,share/icons}` automaticamente **se**
+   o AppImage já estiver instalado (senão pula, sem quebrar em máquina
+   limpa).
+4. O launcher (`base_config/packettracer/packettracer`) já roda com
+   `QT_QPA_PLATFORM=xcb` — o Qt embutido no AppImage não tem plugin de
+   Wayland, e o `hyprland.conf` força `QT_QPA_PLATFORM=wayland` global.
+   Sem isso ele crasha com "no Qt platform plugin could be initialized".
 
 ## Estrutura
 

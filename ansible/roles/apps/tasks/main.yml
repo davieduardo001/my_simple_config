@@ -35,3 +35,74 @@
     - text/html
     - application/xhtml+xml
   changed_when: true
+
+# O Firefox não segue o tema GTK pros botões de janela (usa ícones
+# "symbolic" monocromáticos) — as bolinhas coloridas estilo macOS só saem
+# via userChrome.css. O nome da pasta do profile tem um hash aleatório por
+# instalação, então precisa achar o profile default em vez de symlinkar
+# fixo como o resto do base_config/.
+- name: Locate Firefox profiles.ini
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.config/mozilla/firefox/profiles.ini"
+  register: firefox_profiles_ini
+
+- name: Find Firefox default profile dir
+  ansible.builtin.shell:
+    cmd: >
+      awk -F'=' '/^\[Install/{f=1} f && /^Default=/{print $2; exit}'
+      "{{ ansible_env.HOME }}/.config/mozilla/firefox/profiles.ini"
+    executable: /bin/bash
+  register: firefox_default_profile
+  when: firefox_profiles_ini.stat.exists
+  changed_when: false
+
+- name: Ensure Firefox profile chrome/ dir exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/mozilla/firefox/{{ firefox_default_profile.stdout }}/chrome"
+    state: directory
+    mode: "0755"
+  when: firefox_profiles_ini.stat.exists and firefox_default_profile.stdout | default('') != ''
+
+- name: Symlink Firefox userChrome.css and user.js
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/firefox/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.config/mozilla/firefox/{{ firefox_default_profile.stdout }}/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - chrome/userChrome.css
+    - user.js
+  when: firefox_profiles_ini.stat.exists and firefox_default_profile.stdout | default('') != ''
+
+# Cisco Packet Tracer não entra em desktop_apps: o pacote AUR `packettracer`
+# exige o .deb baixado à mão do netacad.com (precisa de login), então a
+# instalação em si é manual — ver README. Isso aqui só cuida do launcher
+# (o AppImage sozinho não vem com .desktop nem entra no $PATH), condicional
+# a ele já estar instalado.
+- name: Check if Packet Tracer AppImage is installed
+  ansible.builtin.stat:
+    path: /usr/lib/packettracer/packettracer.AppImage
+  register: packettracer_installed
+
+- name: Ensure user bin/applications/icon dirs exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - .local/bin
+    - .local/share/applications
+    - .local/share/icons/hicolor/48x48/apps
+  when: packettracer_installed.stat.exists
+
+- name: Symlink Packet Tracer launcher, .desktop and icon
+  ansible.builtin.file:
+    src: "{{ repo_root }}/base_config/packettracer/{{ item.src }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.dest }}"
+    state: link
+    force: true
+  loop:
+    - { src: packettracer, dest: .local/bin/packettracer }
+    - { src: packettracer.desktop, dest: .local/share/applications/packettracer.desktop }
+    - { src: packettracer.png, dest: .local/share/icons/hicolor/48x48/apps/packettracer.png }
+  when: packettracer_installed.stat.exists
