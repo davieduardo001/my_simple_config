@@ -1,8 +1,20 @@
 @import "colors.css";
 
+/* Os toggles (wifi/bluetooth/lock/power/volume/brilho) usam glifo da Nerd
+   Font como label — mesmo problema de fallback do waybar. Nerd Font como
+   padrão, Inter só nos textos puros (título, corpo da notificação, etc.) */
 * {
-    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
     font-size: 13px;
+}
+
+.widget-title,
+.summary,
+.body,
+.time,
+.widget-mpris-title,
+.widget-mpris-subtitle {
+    font-family: "Inter", sans-serif;
 }
 
 /* ---------- Control center (painel lateral) ---------- */

@@ -1,11 +1,20 @@
 @import "colors.css";
 
+/* A maioria dos módulos mistura ícone (glifo que só existe na Nerd Font) e
+   texto/número no mesmo label — o fallback do Pango pra isso é
+   inconsistente, então a Nerd Font fica como padrão global. O Inter entra
+   só onde é texto puro (relógio, título da janela), sem ícone junto. */
 * {
-    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
     font-size: 13px;
     min-height: 0;
     border: none;
     border-radius: 0;
+}
+
+#window,
+#clock {
+    font-family: "Inter", sans-serif;
 }
 
 window#waybar {
@@ -22,35 +31,12 @@ tooltip {
     color: @text;
 }
 
-#workspaces {
+#custom-workspaces {
     margin: 4px 6px;
-    padding: 0 4px;
-    background: alpha(@surface, 0.45);
-    border-radius: 10px;
-}
-
-#workspaces button {
     padding: 0 8px;
-    min-width: 22px;
-    color: @text_dim;
-    background: transparent;
-    border-radius: 8px;
-    transition: all 0.25s ease;
-}
-
-#workspaces button.empty {
-    color: alpha(@text_dim, 0.45);
-}
-
-#workspaces button.active {
-    color: @text_hi;
-    background: alpha(@surface2, 0.7);
-}
-
-#workspaces button:hover {
-    color: @text;
-    background: alpha(@surface2, 0.5);
-    border-radius: 10px;
+    background: alpha(@surface, 0.45);
+    border-radius: 999px;
+    font-size: 11px;
 }
 
 #window {
@@ -62,6 +48,23 @@ tooltip {
 #clock {
     color: @text_hi;
     font-weight: bold;
+}
+
+#mpris {
+    margin: 4px 8px;
+    padding: 0 12px;
+    background: alpha(@surface, 0.5);
+    border-radius: 999px;
+    color: @text;
+    font-style: italic;
+}
+
+#mpris.playing {
+    color: @text_hi;
+}
+
+#mpris.paused {
+    color: @text_dim;
 }
 
 #tray,

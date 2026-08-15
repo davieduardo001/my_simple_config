@@ -7,21 +7,33 @@
     "margin-right": 12,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock"],
+    "modules-left": ["custom/workspaces", "hyprland/window"],
+    "modules-center": ["mpris", "clock"],
     "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications"],
 
-    "hyprland/workspaces": {
-        "format": "{id}",
-        "persistent-workspaces": {
-            "*": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        },
-        "on-click": "activate"
+    "custom/workspaces": {
+        "exec": "~/.config/waybar/scripts/workspace-icons.sh",
+        "return-type": "",
+        "escape": false,
+        "on-click": "hyprctl dispatch workspace e+1"
     },
 
     "hyprland/window": {
         "max-length": 40,
         "separate-outputs": true
+    },
+
+    "mpris": {
+        "format": "<span foreground='#957fb8'>●</span>  {artist} - {title}",
+        "format-paused": "<span foreground='#957fb8'>●</span>  {artist} - {title}",
+        "format-stopped": "",
+        "max-length": 36,
+        "dynamic-order": ["artist", "title"],
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "tooltip-format": "{player} · {status}"
     },
 
     "clock": {

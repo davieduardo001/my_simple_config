@@ -66,6 +66,8 @@ hyprland_packages:
   - hypridle
   - hyprpolkitagent
   - waybar
+  - jq            # script de ícones de workspace do waybar (parse hyprctl)
+  - socat         # idem — escuta eventos do Hyprland ao vivo, sem polling
   - swaync
   - rofi-wayland
   - alacritty
@@ -135,6 +137,7 @@ lazyvim_dest: "{{ ansible_env.HOME }}/.config/nvim"
 fonts_packages:
   - ttf-cascadia-code-nerd
   - ttf-jetbrains-mono-nerd
+  - inter-font  # fonte da UI (waybar/rofi/swaync/GTK/Qt) — a mais próxima open-source da SF Pro do macOS
 
 # --- Icon/cursor/GTK theming ---
 theming_packages:

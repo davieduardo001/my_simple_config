@@ -3,7 +3,7 @@ configuration {
     show-icons: true;
     icon-theme: "WhiteSur-dark";
     display-drun: "Apps";
-    font: "JetBrainsMono Nerd Font 12";
+    font: "Inter 12";
 }
 
 @theme "spotlight-gray"
