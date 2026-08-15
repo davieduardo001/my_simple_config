@@ -1,4 +1,4 @@
-# Alacritty (tema Kanagawa Dragon).
+# Alacritty (tema Aura).
 # Formato TOML (alacritty >= 0.13).
 
 [env]
@@ -9,15 +9,15 @@ TERM = "alacritty"
 size = 11
 
 [font.normal]
-family = "JetBrainsMono Nerd Font Mono"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Regular"
 
 [font.bold]
-family = "JetBrainsMono Nerd Font Mono"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Bold"
 
 [font.italic]
-family = "JetBrainsMono Nerd Font Mono"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Italic"
 
 # --- Window ---
@@ -35,38 +35,38 @@ history = 10000
 [cursor]
 style = { shape = "Block", blinking = "On" }
 
-# --- Theme (Kanagawa Dragon) ---
+# --- Theme (Aura) ---
 [colors.primary]
-background = "#181616"
-foreground = "#c5c9c5"
+background = "#15141b"
+foreground = "#edecee"
 
 [colors.cursor]
-cursor = "#c5c9c5"
-text = "#181616"
+cursor = "#a277ff"
+text = "#15141b"
 
 [colors.selection]
-background = "#2d4f67"
-text = "#c8c093"
+text = "CellForeground"
+background = "#29263c"
 
 [colors.normal]
-black   = "#0d0c0c"
-red     = "#c4746e"
-green   = "#8a9a7b"
-yellow  = "#c4b28a"
-blue    = "#8ba4b0"
-magenta = "#a292a3"
-cyan    = "#8ea4a2"
-white   = "#c8c093"
+black   = "#110f18"
+red     = "#ff6767"
+green   = "#61ffca"
+yellow  = "#ffca85"
+blue    = "#a277ff"
+magenta = "#a277ff"
+cyan    = "#61ffca"
+white   = "#edecee"
 
 [colors.bright]
-black   = "#a6a69c"
-red     = "#e46876"
-green   = "#87a987"
-yellow  = "#e6c384"
-blue    = "#7fb4ca"
-magenta = "#957fb8"
-cyan    = "#7aa89f"
-white   = "#c5c9c5"
+black   = "#4d4d4d"
+red     = "#ff6767"
+green   = "#61ffca"
+yellow  = "#ffca85"
+blue    = "#a277ff"
+magenta = "#a277ff"
+cyan    = "#61ffca"
+white   = "#edecee"
 
 [[keyboard.bindings]]
 key = "Return"
