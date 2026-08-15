@@ -164,21 +164,22 @@ theming_gtk_theme: "WhiteSur-Dark-alt"
 # então continua sem a bolinha colorida — só a posição/ordem mudam).
 theming_button_layout: "close,minimize,maximize:"
 
-# --- Paleta grayscale: única fonte de verdade das cores do rice ---
+# --- Paleta Aura (roxo): única fonte de verdade das cores do rice ---
 # A role theming renderiza estes valores em base_config/hypr/colors.conf,
 # base_config/waybar/colors.css, base_config/swaync/colors.css e
 # base_config/rofi/colors.rasi (todos versionados). Trocar a paleta aqui e
 # re-rodar `--tags theming` re-tematiza o desktop inteiro.
+# Inspirada no tema Aura do Alacritty (fundo #15141b, acento #a277ff).
 theme_palette:
-  bg: "0a0b0d"
-  bg_alt: "12141a"
-  surface: "1a1d24"
-  surface2: "242830"
-  border: "3a4048"
-  border_hi: "5a626c"
-  text_dim: "8a9098"
-  text: "d4d8dc"
-  text_hi: "eef0f2"
+  bg: "15141b"
+  bg_alt: "1c1a26"
+  surface: "26233a"
+  surface2: "322e4d"
+  border: "3d3a52"
+  border_hi: "a277ff"
+  text_dim: "9b94ad"
+  text: "cbc5da"
+  text_hi: "edecee"
 
 # --- Flatpak apps (infra fica pronta; nenhum app por padrão) ---
 flatpak_apps: []

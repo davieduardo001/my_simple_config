@@ -24,8 +24,8 @@
     },
 
     "mpris": {
-        "format": "<span foreground='#957fb8'>●</span>  {artist} - {title}",
-        "format-paused": "<span foreground='#957fb8'>●</span>  {artist} - {title}",
+        "format": "<span foreground='#a277ff'>●</span>  {artist} - {title}",
+        "format-paused": "<span foreground='#a277ff'>●</span>  {artist} - {title}",
         "format-stopped": "",
         "max-length": 36,
         "dynamic-order": ["artist", "title"],
