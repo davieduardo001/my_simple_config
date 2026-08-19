@@ -8,7 +8,7 @@
     "spacing": 4,
 
     "modules-left": ["custom/workspaces", "hyprland/window"],
-    "modules-center": ["mpris", "clock"],
+    "modules-center": ["clock"],
     "modules-right": ["tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications"],
 
     "custom/workspaces": {
@@ -21,19 +21,6 @@
     "hyprland/window": {
         "max-length": 40,
         "separate-outputs": true
-    },
-
-    "mpris": {
-        "format": "<span foreground='#a277ff'>●</span>  {artist} - {title}",
-        "format-paused": "<span foreground='#a277ff'>●</span>  {artist} - {title}",
-        "format-stopped": "",
-        "max-length": 36,
-        "dynamic-order": ["artist", "title"],
-        "on-click": "playerctl play-pause",
-        "on-click-right": "playerctl next",
-        "on-scroll-up": "playerctl next",
-        "on-scroll-down": "playerctl previous",
-        "tooltip-format": "{player} · {status}"
     },
 
     "clock": {

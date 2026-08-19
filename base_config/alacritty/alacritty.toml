@@ -35,40 +35,55 @@ history = 10000
 [cursor]
 style = { shape = "Block", blinking = "On" }
 
-# --- Theme (Aura) ---
+# --- Theme (WhiteSur gray) ---
 [colors.primary]
-background = "#15141b"
-foreground = "#edecee"
+background = "#1C1C1E"
+foreground = "#F2F2F7"
 
 [colors.cursor]
-cursor = "#a277ff"
-text = "#15141b"
+cursor = "#AEAEB2"
+text = "#1C1C1E"
 
 [colors.selection]
 text = "CellForeground"
-background = "#29263c"
+background = "#3A3A3C"
 
 [colors.normal]
 black   = "#110f18"
 red     = "#ff6767"
 green   = "#61ffca"
 yellow  = "#ffca85"
-blue    = "#a277ff"
-magenta = "#a277ff"
+blue    = "#AEAEB2"
+magenta = "#AEAEB2"
 cyan    = "#61ffca"
-white   = "#edecee"
+white   = "#F2F2F7"
 
 [colors.bright]
-black   = "#4d4d4d"
+black   = "#5A5A5E"
 red     = "#ff6767"
 green   = "#61ffca"
 yellow  = "#ffca85"
-blue    = "#a277ff"
-magenta = "#a277ff"
+blue    = "#AEAEB2"
+magenta = "#AEAEB2"
 cyan    = "#61ffca"
-white   = "#edecee"
+white   = "#F2F2F7"
 
 [[keyboard.bindings]]
 key = "Return"
 mods = "Shift"
 chars = "\u001B\r"
+
+# Copiar / colar (padrão moderno: Ctrl+Shift+C/V)
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+# Seleção com mouse copia direto pro clipboard
+[selection]
+save_to_clipboard = true

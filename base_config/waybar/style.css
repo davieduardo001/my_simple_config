@@ -50,23 +50,6 @@ tooltip {
     font-weight: bold;
 }
 
-#mpris {
-    margin: 4px 8px;
-    padding: 0 12px;
-    background: alpha(@surface, 0.5);
-    border-radius: 999px;
-    color: @text;
-    font-style: italic;
-}
-
-#mpris.playing {
-    color: @text_hi;
-}
-
-#mpris.paused {
-    color: @text_dim;
-}
-
 #tray,
 #network,
 #bluetooth,

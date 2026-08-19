@@ -37,9 +37,9 @@ emit() {
         fi
 
         if [ "$ws" -eq "$active_ws" ]; then
-            out+="<span foreground='#edecee'>${glyph}</span> "
+            out+="<span foreground='#F2F2F7'>${glyph}</span> "
         else
-            out+="<span foreground='#9b94ad'>${glyph}</span> "
+            out+="<span foreground='#98989D'>${glyph}</span> "
         fi
     done
 

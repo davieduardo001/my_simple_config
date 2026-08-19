@@ -1,10 +1,10 @@
 /* Gerado pela role theming — edite theme_palette em ansible/group_vars/all.yml */
-@define-color bg #15141b;
-@define-color bg_alt #1c1a26;
-@define-color surface #26233a;
-@define-color surface2 #322e4d;
-@define-color border #3d3a52;
-@define-color border_hi #a277ff;
-@define-color text_dim #9b94ad;
-@define-color text #cbc5da;
-@define-color text_hi #edecee;
+@define-color bg #1C1C1E;
+@define-color bg_alt #2C2C2E;
+@define-color surface #3A3A3C;
+@define-color surface2 #48484A;
+@define-color border #5A5A5E;
+@define-color border_hi #AEAEB2;
+@define-color text_dim #98989D;
+@define-color text #C7C7CC;
+@define-color text_hi #F2F2F7;
