@@ -1,7 +1,0 @@
----
-- name: Install fonts packages
-  ansible.builtin.include_role:
-    name: paru_install
-  vars:
-    paru_packages: "{{ fonts_packages }}"
-    paru_label: fonts

@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# Wrapper do Cisco Packet Tracer (AppImage do pacote AUR `packettracer`).
-#
-# O Qt embutido no AppImage só trouxe os plugins de plataforma 'linuxfb' e
-# 'xcb' — sem suporte nativo a Wayland. Como o hyprland.conf exporta
-# QT_QPA_PLATFORM=wayland globalmente (pra outros apps Qt), esse AppImage
-# falha direto com "no Qt platform plugin could be initialized". Forçando
-# xcb aqui ele roda via XWayland sem precisar mexer no env global.
-exec env QT_QPA_PLATFORM=xcb /usr/lib/packettracer/packettracer.AppImage "$@"

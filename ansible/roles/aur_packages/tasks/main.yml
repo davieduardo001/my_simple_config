@@ -1,7 +1,0 @@
----
-- name: Install AUR packages
-  ansible.builtin.include_role:
-    name: paru_install
-  vars:
-    paru_packages: "{{ aur_packages }}"
-    paru_label: AUR

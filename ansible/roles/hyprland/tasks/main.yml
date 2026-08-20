@@ -1,7 +1,0 @@
----
-- name: Install hyprland packages
-  ansible.builtin.include_role:
-    name: paru_install
-  vars:
-    paru_packages: "{{ hyprland_packages }}"
-    paru_label: hyprland
